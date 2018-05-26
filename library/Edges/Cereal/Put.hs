@@ -15,3 +15,11 @@ hashMapWithSize keyPutter valuePutter hashMap =
     size = putInthost (A.size hashMap)
     associations = A.traverse_ association hashMap
     association key value = keyPutter key *> valuePutter value
+
+indexLookupTable :: Putter node -> Putter (IndexLookupTable node)
+indexLookupTable putNode (IndexLookupTable size hashMap) =
+  putSize *> putAssociations
+  where
+    putSize = putInthost size
+    putAssociations = A.traverse_ putAssociation hashMap
+    putAssociation key value = putNode key *> putInthost value

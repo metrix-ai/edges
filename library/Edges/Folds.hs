@@ -31,4 +31,15 @@ indexHashMap =
     extract = fst
 
 indexLookupTable :: (Eq node, Hashable node) => Fold node (IndexLookupTable node)
-indexLookupTable = fmap IndexLookupTable indexHashMap
+indexLookupTable =
+  Fold step init extract
+  where
+    init = IndexLookupTable 0 B.empty
+    step (IndexLookupTable index map) key =
+      case B.lookup key map of
+        Just _ -> IndexLookupTable index map
+        Nothing -> let
+          newMap = B.insert key index map
+          newIndex = succ index
+          in IndexLookupTable newIndex newMap
+    extract = id

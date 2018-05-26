@@ -4,7 +4,7 @@ where
 import Edges.Prelude
 
 
-newtype IndexLookupTable node = IndexLookupTable (HashMap node Int)
+data IndexLookupTable node = IndexLookupTable !Int !(HashMap node Int)
 
 newtype NodeLookupTable node = NodeLookupTable (Vector node)
 
