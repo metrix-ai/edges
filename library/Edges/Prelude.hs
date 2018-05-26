@@ -20,16 +20,28 @@ import Control.Monad as Exports
 -------------------------
 import Data.IntMap.Strict as Exports (IntMap)
 
+-- deferred-folds
+-------------------------
+import DeferredFolds.FoldlView as Exports (FoldlView(..))
+
 -- foldl
 -------------------------
 import Control.Foldl as Exports (Fold(..), FoldM(..))
 
--- deferred-folds
+-- hashable
 -------------------------
-import DeferredFolds.FoldlView as Exports (FoldlView(..))
+import Data.Hashable as Exports (Hashable(..))
 
 -- primitive
 -------------------------
 import Data.Primitive as Exports
 import Data.Primitive.UnliftedArray as Exports
 import Control.Monad.Primitive as Exports
+
+-- unordered-containers
+-------------------------
+import Data.HashMap.Strict as Exports (HashMap)
+
+-- vector
+-------------------------
+import Data.Vector as Exports (Vector)

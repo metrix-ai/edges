@@ -42,7 +42,9 @@ library
     Haskell2010
   exposed-modules:
     Edges.Edges
+    Edges.IndexLookupTable
   other-modules:
+    Edges.Types
     Edges.Prelude
     Edges.MultiByteArray
     Edges.ByteArray
@@ -50,12 +52,18 @@ library
     Edges.UnliftedArray.Potoki.Consume
     Edges.UnliftedArray.FoldM
     Edges.Potoki.Consume
+    Edges.Cereal.Put
+    Edges.HashMap
     Edges.Folds
   build-depends:
     base >=4.7 && <5,
+    cereal >=0.5.5 && <0.6,
     containers >=0.5 && <0.6,
     deferred-folds >=0.2.1 && <0.3,
     foldl >=1 && <2,
+    hashable >=1 && <2,
     potoki >=0.11.3 && <0.12,
     potoki-core >=1.5.2 && <1.6,
-    primitive >=0.6.2 && <0.7
+    primitive >=0.6.2 && <0.7,
+    unordered-containers >=0.2.9 && <0.3,
+    vector >=0.12 && <0.13
