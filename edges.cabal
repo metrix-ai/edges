@@ -1,0 +1,61 @@
+name:
+  edges
+version:
+  0.1
+category:
+  Graphs
+synopsis:
+  Tools for efficient immutable graphs
+description:
+  A set of tools for constructing immutable graphs which are both memory and performance-efficient.
+homepage:
+  https://github.com/nikita-volkov/edges 
+bug-reports:
+  https://github.com/nikita-volkov/edges/issues 
+author:
+  Nikita Volkov <nikita.y.volkov@mail.ru>
+maintainer:
+  Metrix Ninjas <ninjas@metrix.ai>
+copyright:
+  (c) 2018, Metrix.AI
+license:
+  MIT
+license-file:
+  LICENSE
+build-type:
+  Simple
+cabal-version:
+  >=1.10
+
+source-repository head
+  type:
+    git
+  location:
+    git://github.com/nikita-volkov/edges.git
+
+library
+  hs-source-dirs:
+    library
+  default-extensions:
+    Arrows, BangPatterns, ConstraintKinds, DataKinds, DefaultSignatures, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NoImplicitPrelude, NoMonomorphismRestriction, OverloadedStrings, PatternGuards, PatternSynonyms, ParallelListComp, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, TemplateHaskell, TupleSections, TypeFamilies, TypeOperators, UnboxedTuples
+  default-language:
+    Haskell2010
+  exposed-modules:
+    Edges.Edges
+  other-modules:
+    Edges.Prelude
+    Edges.MultiByteArray
+    Edges.ByteArray
+    Edges.UnliftedArray
+    Edges.UnliftedArray.Potoki.Consume
+    Edges.UnliftedArray.FoldM
+    Edges.Potoki.Consume
+    Edges.Folds
+  build-depends:
+    base >=4.7 && <5,
+    containers >=0.5 && <0.6,
+    deferred-folds >=0.2.1 && <0.3,
+    foldl >=1 && <2,
+    potoki >=0.11.3 && <0.12,
+    potoki-core >=1.5.2 && <1.6,
+    primitive >=0.6.2 && <0.7
