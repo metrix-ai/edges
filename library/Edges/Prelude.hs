@@ -15,6 +15,7 @@ import Data.Foldable as Exports
 import Data.Traversable as Exports
 import Control.Applicative as Exports
 import Control.Monad as Exports
+import System.IO.Unsafe as Exports
 
 -- containers
 -------------------------

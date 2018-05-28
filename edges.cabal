@@ -43,9 +43,11 @@ library
   exposed-modules:
     Edges.Edges
     Edges.IndexLookupTable
+    Edges.NodeLookupTable
   other-modules:
-    Edges.Types
     Edges.Prelude
+    Edges.Vector
+    Edges.Types
     Edges.MultiByteArray
     Edges.ByteArray
     Edges.UnliftedArray
