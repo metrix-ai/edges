@@ -2,12 +2,11 @@ module Edges.MultiByteArray
 where
 
 import Edges.Prelude
+import Edges.Types
 import qualified Edges.ByteArray as C
 import qualified Edges.UnliftedArray as B
 import qualified DeferredFolds.Unfold as A
 
-
-newtype MultiByteArray = MultiByteArray (UnliftedArray ByteArray)
 
 foldAt :: Prim prim => Int -> MultiByteArray -> Unfold prim
 foldAt index (MultiByteArray ua) =
