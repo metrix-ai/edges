@@ -23,7 +23,7 @@ import Data.IntMap.Strict as Exports (IntMap)
 
 -- deferred-folds
 -------------------------
-import DeferredFolds.FoldlView as Exports (FoldlView(..))
+import DeferredFolds.Unfold as Exports (Unfold(..))
 
 -- foldl
 -------------------------

@@ -4,16 +4,16 @@ where
 import Edges.Prelude
 import qualified Edges.Folds as A
 import qualified Edges.MultiByteArray as B
-import qualified DeferredFolds.FoldlView as C
+import qualified DeferredFolds.Unfold as C
 
 
 newtype Edges = Edges B.MultiByteArray
 
-foldAt :: Int -> Edges -> FoldlView Int
+foldAt :: Int -> Edges -> Unfold Int
 foldAt index (Edges mba) =
   B.foldAt index mba
 
-foldDeepAt :: Int -> Int -> Edges -> FoldlView Int
+foldDeepAt :: Int -> Int -> Edges -> Unfold Int
 foldDeepAt depth index graph =
   if depth < 1
     then mzero
@@ -21,17 +21,17 @@ foldDeepAt depth index graph =
       deeperIndex <- foldAt index graph
       foldDeepAt (pred depth) deeperIndex graph
 
-foldDeep :: Int -> Edges -> FoldlView Int
+foldDeep :: Int -> Edges -> Unfold Int
 foldDeep depth graph =
   do
     index <- foldAll graph
     foldDeepAt depth index graph
 
-foldAll :: Edges -> FoldlView Int
+foldAll :: Edges -> Unfold Int
 foldAll (Edges mba) =
   B.foldIndices mba
 
-foldDeepCounts :: Int -> Edges -> FoldlView (Int, IntMap Int)
+foldDeepCounts :: Int -> Edges -> Unfold (Int, IntMap Int)
 foldDeepCounts depth graph =
   do
     index <- foldAll graph

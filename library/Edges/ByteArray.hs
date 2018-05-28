@@ -5,13 +5,13 @@ import Edges.Prelude
 import Data.Primitive
 
 
-fold :: Prim prim => ByteArray -> FoldlView prim
+fold :: Prim prim => ByteArray -> Unfold prim
 fold ba =
   let
     !primSize =
       8 * sizeofByteArray ba
     in
-      FoldlView $ \ step init ->
+      Unfold $ \ step init ->
       let
         loop index !state =
           if index < primSize
