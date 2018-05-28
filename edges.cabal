@@ -44,6 +44,8 @@ library
     Edges.Edges
     Edges.IndexLookupTable
     Edges.NodeLookupTable
+    Edges.Cereal.Get
+    Edges.Cereal.Put
   other-modules:
     Edges.Prelude
     Edges.Vector
@@ -54,7 +56,6 @@ library
     Edges.UnliftedArray.Potoki.Consume
     Edges.UnliftedArray.FoldM
     Edges.Potoki.Consume
-    Edges.Cereal.Put
     Edges.HashMap
     Edges.Folds
   build-depends:
