@@ -47,6 +47,7 @@ library
     Edges.Cereal.Put
     Edges.Unfolds
     Edges.Types
+    Edges.Folds
   other-modules:
     Edges.Prelude
     Edges.Vector
@@ -55,7 +56,6 @@ library
     Edges.UnliftedArray.FoldM
     Edges.Potoki.Consume
     Edges.HashMap
-    Edges.Folds
   build-depends:
     base >=4.7 && <5,
     cereal >=0.5.5 && <0.6,

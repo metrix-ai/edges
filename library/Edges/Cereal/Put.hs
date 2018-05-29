@@ -40,3 +40,11 @@ putIndexLookupTable putNode (IndexLookupTable size hashMap) =
 putNodeLookupTable :: Putter node -> Putter (NodeLookupTable node)
 putNodeLookupTable putNode (NodeLookupTable vector) =
   putVector putNode vector
+
+putMultiByteArray :: Putter MultiByteArray
+putMultiByteArray =
+  error "TODO"
+
+putEdges :: Putter (Edges from to)
+putEdges (Edges mba) =
+  putMultiByteArray mba

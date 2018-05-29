@@ -43,3 +43,9 @@ indexLookupTable =
           newIndex = succ index
           in IndexLookupTable newIndex newMap
     extract = id
+
+edgeCounts :: Int {-^ Amount of unique source nodes -} -> Fold (Edge from to) (EdgeCounts from to)
+edgeCounts = error "TODO"
+
+edges :: EdgeCounts from to -> Fold (Edge from to) (Edges from to)
+edges = error "TODO"
