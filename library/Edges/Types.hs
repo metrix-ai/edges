@@ -12,6 +12,6 @@ newtype MultiByteArray = MultiByteArray (UnliftedArray ByteArray)
 
 newtype Edges from to = Edges MultiByteArray
 
-newtype Index node = Index Word32
+newtype Index node = Index Int
 
 newtype ByIndex node value = ByIndex (IntMap value)

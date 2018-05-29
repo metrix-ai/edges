@@ -11,7 +11,7 @@ import qualified Data.IntMap.Strict as D
 
 targets :: Edges source target -> Index source -> Unfold (Index target)
 targets (Edges mba) (Index indexPrim) =
-  Index <$> B.foldAtWord32 indexPrim mba
+  Index . fromIntegral @Word32 <$> B.foldAt indexPrim mba
 
 countedTargets :: Edges source target -> Index source -> Unfold (Index target, Int)
 countedTargets edges index =
@@ -23,6 +23,4 @@ countingInts =
 
 countingIndices :: Unfold (Index a) -> Unfold (Index a, Int)
 countingIndices =
-  fmap (first (Index . fromIntegral)) .
-  countingInts .
-  fmap (\ (Index x) -> fromIntegral x)
+  fmap (first Index) . countingInts . fmap (\ (Index x) -> x)
