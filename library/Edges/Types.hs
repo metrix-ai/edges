@@ -8,6 +8,10 @@ data IndexLookupTable node = IndexLookupTable !Int !(HashMap node Int)
 
 newtype NodeLookupTable node = NodeLookupTable (Vector node)
 
-newtype Edges = Edges MultiByteArray
-
 newtype MultiByteArray = MultiByteArray (UnliftedArray ByteArray)
+
+newtype Edges from to = Edges MultiByteArray
+
+newtype Index node = Index Word32
+
+newtype ByIndex node value = ByIndex (IntMap value)
