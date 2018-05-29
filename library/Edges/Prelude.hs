@@ -8,6 +8,8 @@ where
 -- base
 -------------------------
 import Prelude as Exports hiding ((<>), sizeOf)
+import Data.Word as Exports
+import Data.Bifunctor as Exports
 import Data.Functor as Exports
 import Data.Monoid as Exports hiding ((<>), First(..), Last(..))
 import Data.Semigroup as Exports
