@@ -12,6 +12,10 @@ foldAt :: Prim prim => Int -> MultiByteArray -> Unfold prim
 foldAt index (MultiByteArray ua) =
   B.at ua index empty C.fold
 
+foldAtWord32 :: Word32 -> MultiByteArray -> Unfold Word32
+foldAtWord32 index (MultiByteArray ua) =
+  B.at ua (fromIntegral index) empty C.fold
+
 foldIndices :: MultiByteArray -> Unfold Int
 foldIndices (MultiByteArray ua) =
   A.intsInRange 0 (pred (sizeofUnliftedArray ua))
