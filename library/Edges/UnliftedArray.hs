@@ -4,6 +4,7 @@ where
 import Edges.Prelude
 
 
+{-# INLINE at #-}
 at :: PrimUnlifted element => UnliftedArray element -> Int -> forall result. result -> (element -> result) -> result
 at ua index none some =
   if sizeofUnliftedArray ua <= index

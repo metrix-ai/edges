@@ -41,18 +41,15 @@ library
   default-language:
     Haskell2010
   exposed-modules:
-    Edges.Edges
     Edges.IndexLookupTable
     Edges.NodeLookupTable
     Edges.Cereal.Get
     Edges.Cereal.Put
     Edges.Unfolds
+    Edges.Types
   other-modules:
     Edges.Prelude
     Edges.Vector
-    Edges.Types
-    Edges.MultiByteArray
-    Edges.ByteArray
     Edges.UnliftedArray
     Edges.UnliftedArray.Potoki.Consume
     Edges.UnliftedArray.FoldM
