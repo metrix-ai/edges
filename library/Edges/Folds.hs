@@ -1,11 +1,15 @@
+{-# LANGUAGE PartialTypeSignatures #-}
 module Edges.Folds
 where
 
 import Edges.Prelude
 import Edges.Types
-import Control.Foldl
+import Edges.UnliftedArray.FoldM
+import qualified Control.Foldl as L
 import qualified Data.IntMap.Strict as A
 import qualified Data.HashMap.Strict as B
+import qualified Data.Vector as V
+import qualified Data.Vector.Unboxed as UV
 
 
 intCounts :: Fold Int (IntMap Int)
@@ -47,5 +51,27 @@ indexLookupTable =
 edgeCounts :: Int {-^ Amount of unique source nodes -} -> Fold (Edge from to) (EdgeCounts from to)
 edgeCounts = error "TODO"
 
-edges :: EdgeCounts from to -> Fold (Edge from to) (Edges from to)
-edges = error "TODO"
+type MutArr = UnliftedArray (MutableByteArray RealWorld)
+
+mapUnlifted :: (a -> b) -> UnliftedArray a -> UnliftedArray b
+mapUnlifted = undefined
+
+edges :: forall from to . EdgeCounts from to
+      -> Fold (Edge from to) (Edges from to)
+edges (EdgeCounts vs) =
+  let
+
+    prealloc :: MutArr
+    prealloc = unsafePerformIO $ L.foldM (sizedUnsafe (UV.length vs))
+      (V.imap
+        (\i len -> (i, unsafePerformIO . newByteArray $ fromIntegral $ 32 * len))
+        (UV.convert vs))
+
+    step :: MutArr -> Edge from to -> MutArr
+    step = undefined
+
+    final :: MutArr -> Edges from to
+    final = Edges . MultiByteArray . mapUnlifted (unsafePerformIO . unsafeFreezeByteArray)
+
+   in
+    Fold step prealloc final
