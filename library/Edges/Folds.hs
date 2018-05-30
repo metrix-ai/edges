@@ -1,4 +1,3 @@
-{-# LANGUAGE PartialTypeSignatures #-}
 module Edges.Folds
 where
 
@@ -53,6 +52,10 @@ edgeCounts = error "TODO"
 
 type MutArr = UnliftedArray (MutableByteArray RealWorld)
 
+-- | Pair of mutable array and int vector. The latter is needed track
+-- next indices of mutable array during its sequential updates
+data IdxVec vi vu = IdxVec !(UV.Vector Int) !MutArr
+
 mapUnlifted :: (a -> b) -> UnliftedArray a -> UnliftedArray b
 mapUnlifted = undefined
 
@@ -68,7 +71,7 @@ edges (EdgeCounts vs) =
         (UV.convert vs))
 
     step :: MutArr -> Edge from to -> MutArr
-    step = undefined
+    step acc (Edge i j) = undefined
 
     final :: MutArr -> Edges from to
     final = Edges . MultiByteArray . mapUnlifted (unsafePerformIO . unsafeFreezeByteArray)
