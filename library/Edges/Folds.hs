@@ -61,7 +61,7 @@ type MutArr = UnliftedArray (MutableByteArray RealWorld)
 
 -- | Pair of mutable array and int vector. The latter is needed track
 -- next indices of mutable array during its sequential updates
-data IdxVec vi vu = IdxVec !(UV.Vector Int) !MutArr
+data IdxVec = IdxVec !(UVM.MVector RealWorld Int) !MutArr
 
 mapUnlifted :: (a -> b) -> UnliftedArray a -> UnliftedArray b
 mapUnlifted = undefined
@@ -71,17 +71,27 @@ edges :: forall from to . EdgeCounts from to
 edges (EdgeCounts vs) =
   let
 
-    prealloc :: MutArr
-    prealloc = unsafePerformIO $ L.foldM (sizedUnsafe (UV.length vs))
-      (V.imap
-        (\i len -> (i, unsafePerformIO . newByteArray $ fromIntegral $ 32 * len))
-        (UV.convert vs))
+    prealloc :: IdxVec
+    prealloc = unsafePerformIO $ IdxVec
+      <$> UVM.replicate (UV.length vs) 0
+      <*> (L.foldM
+        (sizedUnsafe $ UV.length vs)
+        (V.imap
+          (\i len -> (i, unsafePerformIO . newByteArray $ fromIntegral $ 4 {- TODO: Prim to (sizeof#) -} * len))
+          (UV.convert vs)))
 
-    step :: MutArr -> Edge from to -> MutArr
-    step acc (Edge i j) = undefined
+    step :: IdxVec -> Edge from to -> IdxVec
+    step acc@(IdxVec indices graph) (Edge a b) = unsafePerformIO $ do
+      let neighbs = indexUnliftedArray graph a
+      i <- UVM.read indices a
+      writeByteArray neighbs i b   -- write at next index
+      UVM.write indices a $ succ i -- update next index
+      return acc
 
-    final :: MutArr -> Edges from to
-    final = Edges . MultiByteArray . mapUnlifted (unsafePerformIO . unsafeFreezeByteArray)
+    final :: IdxVec -> Edges from to
+    final (IdxVec _ adjs) =
+      Edges . MultiByteArray $
+        mapUnlifted (unsafePerformIO . unsafeFreezeByteArray) adjs
 
    in
     Fold step prealloc final
