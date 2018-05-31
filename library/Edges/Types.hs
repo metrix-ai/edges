@@ -16,5 +16,8 @@ newtype Edges from to = Edges MultiByteArray
 newtype Index node = Index Int
 
 data Edge from to = Edge !Int !Int
+  deriving (Generic)
 
 newtype EdgeCounts from to = EdgeCounts (A.Vector Word32)
+
+instance Serialize (Edge from to)

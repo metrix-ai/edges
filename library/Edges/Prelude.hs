@@ -16,12 +16,16 @@ import Data.Semigroup as Exports
 import Data.Foldable as Exports
 import Data.Traversable as Exports
 import Control.Applicative as Exports
+import Control.Exception as Exports
 import Control.Monad as Exports
+import GHC.Generics as Exports
 import System.IO.Unsafe as Exports
 
 -- containers
 -------------------------
 import Data.IntMap.Strict as Exports (IntMap)
+
+import Data.Serialize as Exports
 
 -- deferred-folds
 -------------------------
@@ -40,6 +44,10 @@ import Data.Hashable as Exports (Hashable(..))
 import Data.Primitive as Exports
 import Data.Primitive.UnliftedArray as Exports
 import Control.Monad.Primitive as Exports
+
+-- text
+-------------------------
+import Data.Text as Exports (Text)
 
 -- unordered-containers
 -------------------------
