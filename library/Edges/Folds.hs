@@ -89,9 +89,19 @@ edges (EdgeCounts vs) =
       return acc
 
     final :: IdxVec -> Edges from to
-    final (IdxVec _ adjs) =
-      Edges . MultiByteArray $
-        mapUnlifted (unsafePerformIO . unsafeFreezeByteArray) adjs
+    final (IdxVec _ graph) = unsafePerformIO $ do
+      -- copy to mutable and freeze it
+      let size = sizeofUnliftedArray graph
+      copied <- newByteArray 0 >>= newUnliftedArray size
+      copyUnliftedArray copied 0 graph 0 size
+      for_ [0..size - 1] $ \i -> do
+        mutable <- readUnliftedArray copied i
+        writeUnliftedArray copied i =<< unsafeFreezeByteArray mutable
+      result <- freezeUnliftedArray copied 0 size
+      -- return $ Edges . MultiByteArray $ result
+      return undefined --result
+      --
+      --   mapUnlifted (unsafePerformIO . unsafeFreezeByteArray) graph
 
    in
     Fold step prealloc final
