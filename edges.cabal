@@ -9,9 +9,9 @@ synopsis:
 description:
   A set of tools for constructing immutable graphs which are both memory and performance-efficient.
 homepage:
-  https://github.com/nikita-volkov/edges 
+  https://github.com/nikita-volkov/edges
 bug-reports:
-  https://github.com/nikita-volkov/edges/issues 
+  https://github.com/nikita-volkov/edges/issues
 author:
   Nikita Volkov <nikita.y.volkov@mail.ru>
 maintainer:
@@ -45,6 +45,8 @@ library
     Edges.NodeLookupTable
     Edges.Cereal.Get
     Edges.Cereal.Put
+    Edges.Cereal.Potoki.Consume
+    Edges.Cereal.Potoki.Produce
     Edges.Unfolds
     Edges.Types
     Edges.Folds
@@ -64,7 +66,9 @@ library
     foldl >=1 && <2,
     hashable >=1 && <2,
     potoki >=0.11.3 && <0.12,
+    potoki-cereal,
     potoki-core >=1.5.2 && <1.6,
     primitive >=0.6.2 && <0.7,
+    text,
     unordered-containers >=0.2.9 && <0.3,
     vector >=0.12 && <0.13
