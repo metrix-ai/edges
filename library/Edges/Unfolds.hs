@@ -19,7 +19,7 @@ countedTargets edges index =
 
 countingInts :: Unfold Int -> Unfold (Int, Int)
 countingInts =
-  intMap . fold A.intCounts
+  intMap . fold A.intMapCounts
 
 countingIndices :: Unfold (Index a) -> Unfold (Index a, Int)
 countingIndices =

@@ -9,15 +9,22 @@ import qualified Data.IntMap.Strict as A
 import qualified Data.HashMap.Strict as B
 import qualified Data.Vector as V
 import qualified Data.Vector.Unboxed as UV
+import qualified Data.Vector.Unboxed.Mutable as UVM
 
 
-intCounts :: Fold Int (IntMap Int)
-intCounts =
+intMapCounts :: Fold Int (IntMap Int)
+intMapCounts =
   Fold step init extract
   where
     step !state int = A.insertWith (+) int 1 state
     init = A.empty
     extract = id
+
+intCounts :: Int {-^ Vector size -} -> Fold Int {-^ Index -} (UV.Vector Word32)
+intCounts size = Fold step begin final where
+  step ics i = unsafePerformIO $ ics <$ UVM.modify ics succ i
+  begin = unsafePerformIO $ UVM.replicate size 0
+  final = unsafePerformIO . UV.unsafeFreeze
 
 indexHashMap :: (Eq key, Hashable key) => Fold key (HashMap key Int)
 indexHashMap =
@@ -48,7 +55,7 @@ indexLookupTable =
     extract = id
 
 edgeCounts :: Int {-^ Amount of unique source nodes -} -> Fold (Edge from to) (EdgeCounts from to)
-edgeCounts = error "TODO"
+edgeCounts = L.premap (\ (Edge from _) -> from) . fmap EdgeCounts . intCounts
 
 type MutArr = UnliftedArray (MutableByteArray RealWorld)
 
