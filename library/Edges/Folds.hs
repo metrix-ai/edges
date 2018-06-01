@@ -57,15 +57,6 @@ indexLookupTable =
 edgeCounts :: Int {-^ Amount of unique source nodes -} -> Fold (Edge from to) (EdgeCounts from to)
 edgeCounts = L.premap (\ (Edge from _) -> from) . fmap EdgeCounts . intCounts
 
-type MutArr = UnliftedArray (MutableByteArray RealWorld)
-
--- | Pair of mutable array and int vector. The latter is needed track
--- next indices of mutable array during its sequential updates
-data IdxVec = IdxVec !(UVM.MVector RealWorld Int) !MutArr
-
-mapUnlifted :: (a -> b) -> UnliftedArray a -> UnliftedArray b
-mapUnlifted = undefined
-
 edges :: forall from to . EdgeCounts from to
       -> Fold (Edge from to) (Edges from to)
 edges (EdgeCounts vs) =
