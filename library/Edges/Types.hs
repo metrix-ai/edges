@@ -13,6 +13,7 @@ newtype NodeLookupTable node = NodeLookupTable (Vector node)
 newtype MultiByteArray = MultiByteArray (UnliftedArray ByteArray)
 
 newtype Edges from to = Edges MultiByteArray
+  deriving (Eq)
 
 newtype Index node = Index Int
 
