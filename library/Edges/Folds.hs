@@ -84,7 +84,7 @@ edges (EdgeCounts vs) =
       -- copy to mutable, freeze rows then freeze outer
       let size = sizeofUnliftedArray graph
       copied <- unsafeNewUnliftedArray size
-      for_ [0..size - 1] $ \i -> do
+      for_ ([0..size - 1] :: [Int]) $ \i -> do
         let mutable = indexUnliftedArray graph i
         writeUnliftedArray copied i =<< unsafeFreezeByteArray mutable
       result <- unsafeFreezeUnliftedArray copied
