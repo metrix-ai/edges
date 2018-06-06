@@ -14,7 +14,7 @@ newtype MultiByteArray = MultiByteArray (UnliftedArray ByteArray)
   deriving (Eq)
 
 newtype Edges from to = Edges MultiByteArray
-  deriving (Eq)
+  deriving (Eq, Generic)
 
 newtype Index node = Index Int
 
@@ -31,3 +31,4 @@ data IdxVec =
     !(UnliftedArray (MutableByteArray RealWorld))
 
 instance Serialize (Edge from to)
+instance Serialize (Edges from to)
