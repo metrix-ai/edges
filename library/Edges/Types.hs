@@ -1,10 +1,10 @@
 module Edges.Types
 where
 
-import Edges.Prelude
+import Edges.Prelude hiding (fromList, toList)
 import qualified Data.Vector.Unboxed as A
 import qualified Data.Vector.Unboxed.Mutable as B
-
+import qualified GHC.Exts as Exts ( IsList(..) )
 
 data IndexLookupTable node = IndexLookupTable !Int !(HashMap node Int)
 
@@ -31,3 +31,7 @@ data IdxVec =
     !(UnliftedArray (MutableByteArray RealWorld))
 
 instance Serialize (Edge from to)
+
+instance Serialize MultiByteArray where
+  put (MultiByteArray bytearray) = putListOf (putListOf put . Exts.toList) (Exts.toList bytearray)
+  get = (MultiByteArray . Exts.fromList) <$> getListOf (Exts.fromList <$> getListOf get) 
