@@ -11,6 +11,7 @@ data IndexLookupTable node = IndexLookupTable !Int !(HashMap node Int)
 newtype NodeLookupTable node = NodeLookupTable (Vector node)
 
 newtype MultiByteArray = MultiByteArray (UnliftedArray ByteArray)
+  deriving (Eq)
 
 newtype Edges from to = Edges MultiByteArray
   deriving (Eq)
