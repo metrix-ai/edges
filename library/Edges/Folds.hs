@@ -83,7 +83,6 @@ edges (EdgeCounts vs) =
     final (IdxVec _ graph) = unsafePerformIO $ do
       -- copy to mutable, freeze rows then freeze outer
       let size = sizeofUnliftedArray graph
-      traceM "started freezing"
       copied <- unsafeNewUnliftedArray size
       for_ ([0..size - 1] :: [Int]) $ \i -> do
         let mutable = indexUnliftedArray graph i
