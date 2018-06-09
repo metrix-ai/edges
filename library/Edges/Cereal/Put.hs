@@ -41,7 +41,7 @@ putNodeLookupTable :: Putter node -> Putter (NodeLookupTable node)
 putNodeLookupTable putNode (NodeLookupTable vector) =
   putVector putNode vector
 
-putMultiByteArray :: Putter MultiByteArray
+putMultiByteArray :: Putter (MultiPrimArray a)
 putMultiByteArray =
   error "TODO"
 

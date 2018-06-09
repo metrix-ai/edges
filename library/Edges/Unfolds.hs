@@ -11,7 +11,7 @@ import qualified Data.IntMap.Strict as D
 
 targets :: Edges source target -> Index source -> Unfold (Index target)
 targets (Edges mba) (Index indexPrim) =
-  Index . fromIntegral @Word32 <$> multiByteArrayAt mba indexPrim
+  Index . fromIntegral @Word32 <$> multiPrimArrayAt mba indexPrim
 
 countedTargets :: Edges source target -> Index source -> Unfold (Index target, Int)
 countedTargets edges index =
@@ -25,24 +25,13 @@ countingIndices :: Unfold (Index a) -> Unfold (Index a, Int)
 countingIndices =
   fmap (first Index) . countingInts . fmap (\ (Index x) -> x)
 
-multiByteArrayIndices :: MultiByteArray -> Unfold Int
-multiByteArrayIndices (MultiByteArray ua) =
+multiPrimArrayIndices :: MultiPrimArray a -> Unfold Int
+multiPrimArrayIndices (MultiPrimArray ua) =
   intsInRange 0 (pred (sizeofUnliftedArray ua))
 
-multiByteArrayAt :: Prim prim => MultiByteArray -> Int -> Unfold prim
-multiByteArrayAt (MultiByteArray ua) index =
-  B.at ua index empty byteArrayPrims
+multiPrimArrayAt :: Prim prim => MultiPrimArray prim -> Int -> Unfold prim
+multiPrimArrayAt (MultiPrimArray ua) index =
+  B.at ua index empty primArrayPrims
 
-byteArrayPrims :: Prim prim => ByteArray -> Unfold prim
-byteArrayPrims ba =
-  let
-    !primSize =
-      8 * sizeofByteArray ba
-    in
-      Unfold $ \ step init ->
-      let
-        loop index !state =
-          if index < primSize
-            then loop (succ index) (step state (indexByteArray ba index))
-            else state
-        in loop 0 init
+primArrayPrims :: Prim prim => PrimArray prim -> Unfold prim
+primArrayPrims ba = Unfold $ \f z -> foldlPrimArray' f z ba

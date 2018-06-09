@@ -10,10 +10,10 @@ data IndexLookupTable node = IndexLookupTable !Int !(HashMap node Int)
 
 newtype NodeLookupTable node = NodeLookupTable (Vector node)
 
-newtype MultiByteArray = MultiByteArray (UnliftedArray ByteArray)
+newtype MultiPrimArray a = MultiPrimArray (UnliftedArray (PrimArray a))
   deriving (Eq)
 
-newtype Edges from to = Edges MultiByteArray
+newtype Edges from to = Edges (MultiPrimArray Word32)
   deriving (Eq, Generic)
 
 newtype Index node = Index Int
@@ -28,11 +28,11 @@ newtype EdgeCounts from to = EdgeCounts (A.Vector Word32)
 data IdxVec =
   IdxVec
     !(B.MVector RealWorld Int)
-    !(UnliftedArray (MutableByteArray RealWorld))
+    !(UnliftedArray (MutablePrimArray RealWorld Word32))
 
-instance Serialize MultiByteArray where
-  put (MultiByteArray bytearray) = putListOf (putListOf put . Exts.toList) (Exts.toList bytearray)
-  get = (MultiByteArray . Exts.fromList) <$> getListOf (Exts.fromList <$> getListOf get)
+instance (Prim a, Serialize a) => Serialize (MultiPrimArray a) where
+  put (MultiPrimArray bytearray) = putListOf (putListOf put . Exts.toList) (Exts.toList bytearray)
+  get = (MultiPrimArray . Exts.fromList) <$> getListOf (Exts.fromList <$> getListOf get)
 
 instance Serialize (Edge from to)
 instance Serialize (Edges from to)

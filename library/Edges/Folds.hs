@@ -68,26 +68,27 @@ edges (EdgeCounts vs) =
       <*> (L.foldM
         (sizedUnsafe $ UV.length vs)
         (V.imap
-          (\i len -> (i, unsafePerformIO . newByteArray $ fromIntegral $ 4 {- TODO: Prim to (sizeof#) -} * len))
+          (\i len -> (i, unsafePerformIO . newPrimArray $ fromIntegral len))
           (UV.convert vs)))
 
     step :: IdxVec -> Edge from to -> IdxVec
     step acc@(IdxVec indices graph) (Edge a b) = unsafePerformIO $ do
       let neighbs = indexUnliftedArray graph a
       i <- UVM.read indices a
-      writeByteArray neighbs i b   -- write at next index
-      UVM.write indices a $ succ i -- update next index
+      writePrimArray neighbs i $ fromIntegral b  -- write at next index
+      UVM.write indices a $ succ i               -- update next index
       return acc
 
     final :: IdxVec -> Edges from to
     final (IdxVec _ graph) = unsafePerformIO $ do
       -- copy to mutable, freeze rows then freeze outer
       let size = sizeofUnliftedArray graph
+      traceM "started freezing"
       copied <- unsafeNewUnliftedArray size
       for_ ([0..size - 1] :: [Int]) $ \i -> do
         let mutable = indexUnliftedArray graph i
-        writeUnliftedArray copied i =<< unsafeFreezeByteArray mutable
+        writeUnliftedArray copied i =<< unsafeFreezePrimArray mutable
       result <- unsafeFreezeUnliftedArray copied
-      return $ Edges . MultiByteArray $ result
+      return $ Edges . MultiPrimArray $ result
    in
     Fold step prealloc final
