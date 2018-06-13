@@ -16,10 +16,11 @@ sizedUnsafe size =
   Consume $ \ (A.Fetch fetchIO) -> do
     mutable <- unsafeNewUnliftedArray size
     let
-      iterate =
-        join $ fetchIO
-          (unsafeFreezeUnliftedArray mutable)
-          (\ (index, element) -> do
+      iterate = do
+        mayP <- fetchIO
+        case mayP of
+          Nothing -> unsafeFreezeUnliftedArray mutable
+          Just (index, element) -> do
             writeUnliftedArray mutable index element
-            iterate)
+            iterate
       in iterate
