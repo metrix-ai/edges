@@ -1,7 +1,7 @@
 name:
   edges
 version:
-  0.3.0.1
+  0.3.0.2
 category:
   Graphs
 synopsis:
@@ -69,6 +69,7 @@ library
     potoki-cereal,
     potoki-core >=2 && <=2.1,
     primitive >=0.6.4 && <0.7,
+    tagged,
     text,
     unordered-containers >=0.2.9 && <0.3,
     vector >=0.12 && <0.13

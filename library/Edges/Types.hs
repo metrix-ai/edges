@@ -16,7 +16,8 @@ newtype MultiPrimArray a = MultiPrimArray (UnliftedArray (PrimArray a))
 newtype Edges from to = Edges (MultiPrimArray Word32)
   deriving (Eq, Generic)
 
-newtype Index node = Index Int
+type Index node = Tagged node Int
+pattern Index i = Tagged i
 
 data Edge from to = Edge !Int !Int
   deriving (Generic)
