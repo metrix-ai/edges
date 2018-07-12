@@ -34,8 +34,11 @@ targets (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
     targetCountVarTable <- D.newTVarArray 0 targetAmount
     waitTillDone <-
       D.traversePrimArrayWithIndexConcurrently sourceCountsPa concurrency $ \ sourceIndex sourceCount ->
-      B.forM_ (A.primMultiArrayAt edgesPma sourceIndex) $ \ targetIndex ->
-      D.modifyTVarArrayAt targetCountVarTable (fromIntegral targetIndex) (+ sourceCount)
+      case sourceCount of
+        0 -> return ()
+        _ ->
+          B.forM_ (A.primMultiArrayAt edgesPma sourceIndex) $ \ targetIndex ->
+          D.modifyTVarArrayAt targetCountVarTable (fromIntegral targetIndex) (+ sourceCount)
     waitTillDone
     targetCountsPa <- D.freezeTVarArrayAsPrimArray targetCountVarTable
     return (NodeCounts targetCountsPa)
