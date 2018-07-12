@@ -40,4 +40,4 @@ targets (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
     targetCountsPa <- D.freezeTVarArrayAsPrimArray targetCountVarTable
     return (NodeCounts targetCountsPa)
   where
-    concurrency = max (div numCapabilities 2) 1
+    concurrency = numCapabilities * 2
