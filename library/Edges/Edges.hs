@@ -11,10 +11,10 @@ import qualified PrimitiveExtras.Monad as A
 import qualified Control.Foldl as B
 
 
-list :: [(Index a, Index b)] -> Edges a b
+list :: [(Node a, Node b)] -> Edges a b
 list list =
   let
-    remappedList = flip fmap list $ \ (Index aInt, Index bInt) -> (aInt, fromIntegral bInt)
+    remappedList = flip fmap list $ \ (Node aInt, Node bInt) -> (aInt, fromIntegral bInt)
     aAmount = length (nub (map fst remappedList))
     bAmount = length (nub (map snd remappedList))
     in

@@ -1,7 +1,7 @@
-module Edges.IndexCounts
+module Edges.NodeCounts
 (
-  IndexCounts,
-  index,
+  NodeCounts,
+  node,
   targets,
 )
 where
@@ -14,22 +14,22 @@ import qualified PrimitiveExtras.IO as D
 import qualified DeferredFolds.UnfoldM as B
 
 
-index :: Edges entity anyEntity -> Index entity -> IndexCounts entity
-index (Edges _ edgesPma) =
+node :: Edges entity anyEntity -> Node entity -> NodeCounts entity
+node (Edges _ edgesPma) =
   let size = C.primMultiArrayOuterLength edgesPma
-      in indexWithSize size
+      in nodeWithSize size
 
-indexWithSize :: Int -> Index entity -> IndexCounts entity
-indexWithSize size (Index index) =
-  IndexCounts (C.oneHotPrimArray size index 1)
+nodeWithSize :: Int -> Node entity -> NodeCounts entity
+nodeWithSize size (Node index) =
+  NodeCounts (C.oneHotPrimArray size index 1)
 
 {-|
 Count the occurrences of targets based on the occurrences of sources.
 
 Utilizes concurrency.
 -}
-targets :: Edges source target -> IndexCounts source -> IndexCounts target
-targets (Edges targetAmount edgesPma) (IndexCounts sourceCountsPa) =
+targets :: Edges source target -> NodeCounts source -> NodeCounts target
+targets (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
   unsafePerformIO $ do
     targetCountVarTable <- D.newTVarArray 0 targetAmount
     waitTillDone <-
@@ -38,6 +38,6 @@ targets (Edges targetAmount edgesPma) (IndexCounts sourceCountsPa) =
       D.modifyTVarArrayAt targetCountVarTable (fromIntegral targetIndex) (+ sourceCount)
     waitTillDone
     targetCountsPa <- D.freezeTVarArrayAsPrimArray targetCountVarTable
-    return (IndexCounts targetCountsPa)
+    return (NodeCounts targetCountsPa)
   where
     concurrency = max (div numCapabilities 2) 1

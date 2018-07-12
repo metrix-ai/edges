@@ -26,12 +26,12 @@ instance Semigroupoid Count where
     where
       concurrency = max (div numCapabilities 2) 1
 
-run :: Count a b -> Index a -> IndexCounts b
-run (Count bAmount aToBIO) (Index aIndex) =
+run :: Count a b -> Node a -> NodeCounts b
+run (Count bAmount aToBIO) (Node aIndex) =
   unsafePerformIO $ do
     bCountVarTable <- D.newTVarArray 0 bAmount
     aToBIO aIndex 1 bCountVarTable
-    IndexCounts <$> D.freezeTVarArrayAsPrimArray bCountVarTable
+    NodeCounts <$> D.freezeTVarArrayAsPrimArray bCountVarTable
 
 targets :: Edges source target -> Count source target
 targets (Edges targetArraySize edgesPma) =

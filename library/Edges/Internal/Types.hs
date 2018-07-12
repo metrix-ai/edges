@@ -9,9 +9,9 @@ data Edges source target =
     {-# UNPACK #-} !Int {-^ Target array size -}
     {-# UNPACK #-} !(PrimMultiArray Word32)
 
-newtype Index entity = Index Int
+newtype Node entity = Node Int
 
-newtype IndexCounts entity = IndexCounts (PrimArray Word32)
+newtype NodeCounts entity = NodeCounts (PrimArray Word32)
 
 data Count source target =
   Count
