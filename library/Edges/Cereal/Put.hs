@@ -2,7 +2,7 @@ module Edges.Cereal.Put
 where
 
 import Edges.Prelude
-import Edges.Internal.Types
+import Edges.Types
 import Data.Serialize.Put
 import PrimitiveExtras.Cereal.Put
 

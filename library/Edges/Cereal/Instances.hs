@@ -2,7 +2,7 @@ module Edges.Cereal.Instances
 where
 
 import Edges.Prelude
-import Edges.Internal.Types
+import Edges.Types
 import Data.Serialize
 import qualified Edges.Cereal.Get as A
 import qualified Edges.Cereal.Put as B

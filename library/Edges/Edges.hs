@@ -9,7 +9,7 @@ module Edges.Edges
 where
 
 import Edges.Prelude
-import Edges.Internal.Types
+import Edges.Types
 import Edges.Cereal.Instances ()
 import qualified PrimitiveExtras.Monad as Monad
 import qualified Control.Foldl as Foldl

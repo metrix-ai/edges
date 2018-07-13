@@ -2,7 +2,7 @@ module Edges.Cereal.Get
 where
 
 import Edges.Prelude
-import Edges.Internal.Types
+import Edges.Types
 import Data.Serialize.Get
 import PrimitiveExtras.Cereal.Get
 

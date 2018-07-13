@@ -5,7 +5,7 @@ module Edges.Node
 where
 
 import Edges.Prelude
-import Edges.Internal.Types
+import Edges.Types
 
 instance Show (Node a) where
   show (Node int) = show int

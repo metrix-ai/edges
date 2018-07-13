@@ -1,4 +1,4 @@
-module Edges.Internal.Types
+module Edges.Types
 where
 
 import Edges.Prelude
