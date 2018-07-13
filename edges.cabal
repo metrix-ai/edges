@@ -43,6 +43,7 @@ library
   exposed-modules:
     Edges.Edges
     Edges.NodeCounts
+    Edges.Node
   other-modules:
     Edges.Prelude
     Edges.Internal.Types
