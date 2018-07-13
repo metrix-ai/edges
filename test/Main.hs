@@ -1,6 +1,7 @@
 module Main where
 
 import Prelude
+import Test.QuickCheck
 import Test.QuickCheck.Instances
 import Test.Tasty
 import Test.Tasty.Runners
@@ -9,12 +10,14 @@ import Test.Tasty.QuickCheck
 import qualified Edges.Edges as A
 import qualified Edges.NodeCounts as B
 import qualified Edges.Node as C
+import qualified Data.Serialize as D
+
 
 main =
   defaultMain $
   testGroup "All tests" $
   [
-    testGroup "Bipartite" $ let
+    testGroup "Predefined bipartite" $ let
       edgeList :: [(C.Node (Proxy 1), C.Node (Proxy 2))]
       edgeList =
         fmap (bimap C.Node C.Node) $
@@ -38,4 +41,7 @@ main =
             expectedEdgeList = sort $ fmap swap edgeList
             in assertEqual (show reconstructedEdgeList) expectedEdgeList reconstructedEdgeList
         ]
+    ,
+    testProperty "Encoding/decoding with Cereal" $ forAll (A.genBipartiteWithLimits 10 20) $ \ (edges1, edges2) ->
+    D.decode (D.encode edges1) === Right edges1
   ]
