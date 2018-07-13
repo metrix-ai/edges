@@ -3,6 +3,7 @@ module Edges.Edges
   Edges,
   list,
   listBipartite,
+  primListBipartite,
   toAssocUnfoldM,
   toAssocList,
 )
@@ -21,8 +22,8 @@ import qualified DeferredFolds.UnfoldM as UnfoldM
 list :: [(Node a, Node b)] -> Edges a b
 list list =
   Par.runPar $ do
-    aSizeFuture <- Par.spawnP $ succ $ maximum $ flip fmap list $ \ (Node x, _) -> x
-    bSizeFuture <- Par.spawnP $ succ $ maximum $ flip fmap list $ \ (_, Node x) -> x
+    aSizeFuture <- Par.spawnP $ succ $ fromMaybe 0 $ flip Foldl.fold list $ flip lmap Foldl.maximum $ \ (Node x, _) -> x
+    bSizeFuture <- Par.spawnP $ succ $ fromMaybe 0 $ flip Foldl.fold list $ flip lmap Foldl.maximum $ \ (_, Node x) -> x
     aToBPrimFoldableFuture <- Par.spawnP $ flip fmap list $ \ (Node aInt, Node bInt) -> (aInt, fromIntegral bInt)
     aSize <- Par.get aSizeFuture
     bSize <- Par.get bSizeFuture
@@ -30,12 +31,15 @@ list list =
     return aToBEdges
 
 listBipartite :: [(Node a, Node b)] -> (Edges a b, Edges b a)
-listBipartite list =
+listBipartite = coerce primListBipartite
+
+primListBipartite :: [(Int, Int)] -> (Edges a b, Edges b a)
+primListBipartite list =
   Par.runPar $ do
-    aSizeFuture <- Par.spawnP $ succ $ maximum $ flip fmap list $ \ (Node x, _) -> x
-    bSizeFuture <- Par.spawnP $ succ $ maximum $ flip fmap list $ \ (_, Node x) -> x
-    aToBPrimFoldableFuture <- Par.spawnP $ flip fmap list $ \ (Node aInt, Node bInt) -> (aInt, fromIntegral bInt)
-    bToAPrimFoldableFuture <- Par.spawnP $ flip fmap list $ \ (Node aInt, Node bInt) -> (bInt, fromIntegral aInt)
+    aSizeFuture <- Par.spawnP $ succ $ fromMaybe 0 $ flip Foldl.fold list $ flip lmap Foldl.maximum fst
+    bSizeFuture <- Par.spawnP $ succ $ fromMaybe 0 $ flip Foldl.fold list $ flip lmap Foldl.maximum snd
+    aToBPrimFoldableFuture <- Par.spawnP $ flip fmap list $ \ (aInt, bInt) -> (aInt, fromIntegral bInt)
+    bToAPrimFoldableFuture <- Par.spawnP $ flip fmap list $ \ (aInt, bInt) -> (bInt, fromIntegral aInt)
     aSize <- Par.get aSizeFuture
     bSize <- Par.get bSizeFuture
     aToBEdgesFuture <- Par.spawn_ $ primFoldableWithAmounts aSize bSize <$> Par.get aToBPrimFoldableFuture
