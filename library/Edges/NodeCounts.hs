@@ -8,6 +8,7 @@ where
 
 import Edges.Prelude hiding (index, toList)
 import Edges.Internal.Types
+import Edges.Cereal.Instances ()
 import qualified PrimitiveExtras.UnfoldM as A
 import qualified PrimitiveExtras.Pure as C
 import qualified PrimitiveExtras.IO as D
