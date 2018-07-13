@@ -3,12 +3,17 @@ where
 
 import Edges.Prelude
 import Edges.Internal.Types
-import qualified PrimitiveExtras.Monad as A
+import Data.Serialize.Put
+import PrimitiveExtras.Cereal.Put
 
 
 nodeCounts :: Putter (NodeCounts entity)
 nodeCounts (NodeCounts pa) =
-  size <> elements
+  primArray putWord32le pa
+
+edges :: Putter (Edges a b)
+edges (Edges targetSpaceValue mpaValue) =
+  targetSpace <> mpa
   where
-    size = putInt64le (fromIntegral (sizeofPrimArray pa))
-    elements = flip traversePrimArray_ pa $ \ element -> putWord32le element
+    targetSpace = putInt64le (fromIntegral targetSpaceValue)
+    mpa = primMultiArray putWord32le mpaValue

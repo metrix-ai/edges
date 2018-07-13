@@ -3,12 +3,17 @@ where
 
 import Edges.Prelude
 import Edges.Internal.Types
-import qualified PrimitiveExtras.Monad as A
+import Data.Serialize.Get
+import PrimitiveExtras.Cereal.Get
 
 
 nodeCounts :: Get (NodeCounts entity)
 nodeCounts =
+  NodeCounts <$> primArray getWord32le
+
+edges :: Get (Edges a b)
+edges =
   do
-    size <- getInt64le
-    pa <- A.replicateMPrimArray (fromIntegral size) getWord32le
-    return (NodeCounts pa)
+    targetSpace <- fromIntegral <$> getInt64le
+    pma <- primMultiArray getWord32le
+    return (Edges targetSpace pma)

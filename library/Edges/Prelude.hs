@@ -97,7 +97,7 @@ import Data.Semigroupoid as Exports
 
 -- cereal
 -------------------------
-import Data.Serialize as Exports
+import Data.Serialize as Exports (Serialize)
 
 -- deferred-folds
 -------------------------
