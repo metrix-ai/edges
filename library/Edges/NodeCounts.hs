@@ -6,13 +6,16 @@ module Edges.NodeCounts
 )
 where
 
-import Edges.Prelude hiding (index)
+import Edges.Prelude hiding (index, toList)
 import Edges.Internal.Types
 import qualified PrimitiveExtras.UnfoldM as A
 import qualified PrimitiveExtras.Pure as C
 import qualified PrimitiveExtras.IO as D
 import qualified DeferredFolds.UnfoldM as B
 
+
+instance Show (NodeCounts a) where
+  show = show . toList
 
 node :: Edges entity anyEntity -> Node entity -> NodeCounts entity
 node (Edges _ edgesPma) =
@@ -44,3 +47,6 @@ targets (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
     return (NodeCounts targetCountsPa)
   where
     concurrency = numCapabilities * 2
+
+toList :: NodeCounts entity -> [Word32]
+toList (NodeCounts pa) = foldrPrimArray' (:) [] pa
