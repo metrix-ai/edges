@@ -6,6 +6,7 @@ module Edges.Edges
   primListBipartite,
   toAssocUnfoldM,
   toAssocList,
+  genBipartiteWithLimits,
 )
 where
 
@@ -17,7 +18,11 @@ import qualified Control.Foldl as Foldl
 import qualified Control.Monad.Par as Par
 import qualified PrimitiveExtras.UnfoldM as UnfoldM
 import qualified DeferredFolds.UnfoldM as UnfoldM
+import qualified Test.QuickCheck.Gen as Gen
 
+deriving instance Eq (Edges a b)
+
+deriving instance Show (Edges a b)
 
 list :: [(Node a, Node b)] -> Edges a b
 list list =
@@ -61,3 +66,15 @@ toAssocUnfoldM (Edges _ mpa) =
 toAssocList :: Edges a b -> [(Node a, Node b)]
 toAssocList edges =
   UnfoldM.fold Foldl.list (toAssocUnfoldM edges)
+
+genBipartiteWithLimits :: Int -> Int -> Gen.Gen (Edges a b, Edges b a)
+genBipartiteWithLimits nodeLimit edgeLimit =
+  do
+    aMaxIndex <- Gen.choose (0, pred nodeLimit)
+    bMaxIndex <- Gen.choose (0, pred nodeLimit)
+    edgesAmount <- Gen.choose (0, edgeLimit)
+    if aMaxIndex == 0 || bMaxIndex == 0
+      then return (primListBipartite [])
+      else do
+        edges <- replicateM edgesAmount $ (,) <$> Gen.choose (0, aMaxIndex) <*> Gen.choose (0, bMaxIndex)
+        return (primListBipartite edges)
