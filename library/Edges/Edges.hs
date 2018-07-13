@@ -3,14 +3,18 @@ module Edges.Edges
   Edges,
   list,
   listBipartite,
+  toAssocUnfoldM,
+  toAssocList,
 )
 where
 
 import Edges.Prelude
 import Edges.Internal.Types
-import qualified PrimitiveExtras.Monad as A
-import qualified Control.Foldl as B
+import qualified PrimitiveExtras.Monad as Monad
+import qualified Control.Foldl as Foldl
 import qualified Control.Monad.Par as Par
+import qualified PrimitiveExtras.UnfoldM as UnfoldM
+import qualified DeferredFolds.UnfoldM as UnfoldM
 
 
 list :: [(Node a, Node b)] -> Edges a b
@@ -41,5 +45,14 @@ listBipartite list =
 
 primFoldableWithAmounts :: Foldable f => Int -> Int -> f (Int, Word32) -> Edges a b
 primFoldableWithAmounts aAmount bAmount foldable =
-  Edges bAmount $ runIdentity $ A.primMultiArray aAmount $ \ fold ->
-  Identity $ B.fold fold foldable
+  Edges bAmount $ runIdentity $ Monad.primMultiArray aAmount $ \ fold ->
+  Identity $ Foldl.fold fold foldable
+
+toAssocUnfoldM :: Monad m => Edges a b -> UnfoldM m (Node a, Node b)
+toAssocUnfoldM (Edges _ mpa) =
+  fmap (\ (aInt, bWord32) -> (Node aInt, Node (fromIntegral bWord32))) $
+  UnfoldM.primMultiArrayAssocs mpa
+
+toAssocList :: Edges a b -> [(Node a, Node b)]
+toAssocList edges =
+  UnfoldM.fold Foldl.list (toAssocUnfoldM edges)

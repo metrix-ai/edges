@@ -3,6 +3,7 @@ module Edges.NodeCounts
   NodeCounts,
   node,
   targets,
+  toList,
 )
 where
 
