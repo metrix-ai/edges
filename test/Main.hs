@@ -40,6 +40,23 @@ main =
             reconstructedEdgeList = sort $ A.toAssocList edges2
             expectedEdgeList = sort $ fmap swap edgeList
             in assertEqual (show reconstructedEdgeList) expectedEdgeList reconstructedEdgeList
+          ,
+          testGroup "Counting at depth" $ let
+            node = C.Node 1 :: C.Node (Proxy 1)
+            in
+              [
+                testCase "0" $ let
+                  nodeCountsList = B.node edges1 node & B.toList
+                  in assertEqual (show nodeCountsList) [0, 1, 0] nodeCountsList
+                ,
+                testCase "1" $ let
+                  nodeCountsList = B.node edges1 node & B.targets edges1 & B.toList
+                  in assertEqual (show nodeCountsList) [1, 1, 0] nodeCountsList
+                ,
+                testCase "2" $ let
+                  nodeCountsList = B.node edges1 node & B.targets edges1 & B.targets edges2 & B.toList
+                  in assertEqual (show nodeCountsList) [2, 2, 1] nodeCountsList
+              ]
         ]
     ,
     testProperty "Encoding/decoding with Cereal" $ forAll (A.genBipartiteWithLimits 10 20) $ \ (edges1, edges2) ->
