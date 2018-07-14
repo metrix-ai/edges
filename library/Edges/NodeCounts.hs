@@ -5,6 +5,7 @@ module Edges.NodeCounts
   nodeTargets,
   targets,
   toList,
+  toUnboxedVector,
 )
 where
 
@@ -16,6 +17,7 @@ import qualified PrimitiveExtras.Pure as C
 import qualified PrimitiveExtras.IO as D
 import qualified PrimitiveExtras.Fold as E
 import qualified DeferredFolds.UnfoldM as B
+import qualified Data.Vector.Unboxed as F
 import qualified Control.Monad.Par.IO as Par
 import qualified Control.Monad.Par as Par hiding (runParIO)
 
@@ -60,3 +62,6 @@ targets (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
 
 toList :: NodeCounts entity -> [Word32]
 toList (NodeCounts pa) = foldrPrimArray' (:) [] pa
+
+toUnboxedVector :: NodeCounts entity -> F.Vector Word32
+toUnboxedVector (NodeCounts pa) = C.primArrayUnboxedVector pa
