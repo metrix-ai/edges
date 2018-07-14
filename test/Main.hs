@@ -60,6 +60,17 @@ main =
                 testCase "2" $ let
                   nodeCountsList = B.nodeTargets edges1 node & B.targets edges2 & B.toList
                   in assertEqual (show nodeCountsList) [2, 2, 1] nodeCountsList
+                ,
+                testCase "3" $ let
+                  nodeCountsList = B.nodeTargets edges1 node & B.targets edges2 & B.targets edges1 & B.toList
+                  in
+                    {-
+                    [0, 1]
+                    [[0, 1, 2], [0, 1]]
+                    [[[0, 1, 2], [0, 1], [0]], [[0, 1, 2], [0, 1]]]
+                    [5, 4, 2]
+                    -}
+                    assertEqual (show nodeCountsList) [5, 4, 2] nodeCountsList
               ]
         ]
     ,
