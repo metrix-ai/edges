@@ -49,12 +49,16 @@ main =
                   nodeCountsList = B.node edges1 node & B.toList
                   in assertEqual (show nodeCountsList) [0, 1, 0] nodeCountsList
                 ,
-                testCase "1" $ let
+                testCase "1, unoptimized" $ let
                   nodeCountsList = B.node edges1 node & B.targets edges1 & B.toList
                   in assertEqual (show nodeCountsList) [1, 1, 0] nodeCountsList
                 ,
+                testCase "1" $ let
+                  nodeCountsList = B.nodeTargets edges1 node & B.toList
+                  in assertEqual (show nodeCountsList) [1, 1, 0] nodeCountsList
+                ,
                 testCase "2" $ let
-                  nodeCountsList = B.node edges1 node & B.targets edges1 & B.targets edges2 & B.toList
+                  nodeCountsList = B.nodeTargets edges1 node & B.targets edges2 & B.toList
                   in assertEqual (show nodeCountsList) [2, 2, 1] nodeCountsList
               ]
         ]

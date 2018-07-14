@@ -2,6 +2,7 @@ module Edges.NodeCounts
 (
   NodeCounts,
   node,
+  nodeTargets,
   targets,
   toList,
 )
@@ -13,6 +14,7 @@ import Edges.Cereal.Instances ()
 import qualified PrimitiveExtras.UnfoldM as A
 import qualified PrimitiveExtras.Pure as C
 import qualified PrimitiveExtras.IO as D
+import qualified PrimitiveExtras.Fold as E
 import qualified DeferredFolds.UnfoldM as B
 import qualified Control.Monad.Par.IO as Par
 import qualified Control.Monad.Par as Par hiding (runParIO)
@@ -29,6 +31,13 @@ node (Edges _ edgesPma) =
 nodeWithSize :: Int -> Node entity -> NodeCounts entity
 nodeWithSize size (Node index) =
   NodeCounts (C.oneHotPrimArray size index 1)
+
+nodeTargets :: Edges surce target -> Node source -> NodeCounts target
+nodeTargets (Edges targetAmount edgesPma) (Node sourceIndex) =
+  let indexUnfold = fmap fromIntegral (A.primMultiArrayAt edgesPma sourceIndex)
+      indexFold = E.indexCounts targetAmount
+      countPa = B.fold indexFold indexUnfold
+      in NodeCounts countPa
 
 {-|
 Count the occurrences of targets based on the occurrences of sources.
