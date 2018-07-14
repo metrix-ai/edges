@@ -44,6 +44,7 @@ library
     Edges.Edges
     Edges.NodeCounts
     Edges.Node
+    Edges.Potoki.Produce
   other-modules:
     Edges.Cereal.Instances
     Edges.Cereal.Get
@@ -58,7 +59,7 @@ library
     foldl >=1.4.2 && <2,
     monad-par >=0.3.4.8 && <0.4,
     pointed >=5 && <6,
-    potoki >=2 && <2.1,
+    potoki >=2.0.2 && <2.1,
     potoki-cereal >=0.2.1.1 && <0.3,
     primitive >=0.6.4 && <0.7,
     primitive-extras >=0.3 && <0.4,
