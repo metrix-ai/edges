@@ -45,6 +45,7 @@ library
     Edges.NodeCounts
     Edges.Node
     Edges.Potoki.Produce
+    Edges.IO
   other-modules:
     Edges.Cereal.Instances
     Edges.Cereal.Get
@@ -66,6 +67,7 @@ library
     profunctors >=5 && <6,
     QuickCheck >=2.8.1 && <3,
     semigroupoids >=5.2 && <6,
+    text >=1 && <2,
     vector >=0.12 && <0.13
 
 test-suite test

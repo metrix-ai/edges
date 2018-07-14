@@ -121,6 +121,10 @@ import Data.Vector as Exports (Vector)
 -------------------------
 import PrimitiveExtras.Data as Exports
 
+-- text
+-------------------------
+import Data.Text as Exports (Text)
+
 import qualified Data.Vector.Unboxed as UnboxedVector
 
 type UnboxedVector = UnboxedVector.Vector
