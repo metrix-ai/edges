@@ -14,6 +14,8 @@ import qualified PrimitiveExtras.UnfoldM as A
 import qualified PrimitiveExtras.Pure as C
 import qualified PrimitiveExtras.IO as D
 import qualified DeferredFolds.UnfoldM as B
+import qualified Control.Monad.Par.IO as Par
+import qualified Control.Monad.Par as Par hiding (runParIO)
 
 
 instance Show (NodeCounts a) where
@@ -35,20 +37,17 @@ Utilizes concurrency.
 -}
 targets :: Edges source target -> NodeCounts source -> NodeCounts target
 targets (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
-  unsafePerformIO $ do
-    targetCountVarTable <- D.newTVarArray 0 targetAmount
-    waitTillDone <-
-      D.traversePrimArrayWithIndexConcurrently sourceCountsPa concurrency $ \ sourceIndex sourceCount ->
-      case sourceCount of
+  unsafePerformIO $ Par.runParIO $ do
+    targetCountVarTable <- liftIO (D.newTVarArray 0 targetAmount)
+    Par.parFor (Par.InclusiveRange 0 (pred (sizeofPrimArray sourceCountsPa))) $ \ sourceIndex ->
+      case indexPrimArray sourceCountsPa sourceIndex of
         0 -> return ()
-        _ ->
+        sourceCount ->
+          liftIO $
           B.forM_ (A.primMultiArrayAt edgesPma sourceIndex) $ \ targetIndex ->
           D.modifyTVarArrayAt targetCountVarTable (fromIntegral targetIndex) (+ sourceCount)
-    waitTillDone
-    targetCountsPa <- D.freezeTVarArrayAsPrimArray targetCountVarTable
+    targetCountsPa <- liftIO (D.freezeTVarArrayAsPrimArray targetCountVarTable)
     return (NodeCounts targetCountsPa)
-  where
-    concurrency = numCapabilities * 2
 
 toList :: NodeCounts entity -> [Word32]
 toList (NodeCounts pa) = foldrPrimArray' (:) [] pa
