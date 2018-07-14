@@ -17,3 +17,6 @@ edges =
     targetSpace <- fromIntegral <$> getInt64le
     pma <- primMultiArray getWord32le
     return (Edges targetSpace pma)
+
+node :: Get (Node a)
+node = Node . fromIntegral <$> getInt64le

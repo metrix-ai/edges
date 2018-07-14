@@ -17,3 +17,6 @@ edges (Edges targetSpaceValue mpaValue) =
   where
     targetSpace = putInt64le (fromIntegral targetSpaceValue)
     mpa = primMultiArray putWord32le mpaValue
+
+node :: Putter (Node a)
+node (Node int) = putInt64le (fromIntegral int)

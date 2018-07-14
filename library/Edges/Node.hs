@@ -7,6 +7,7 @@ where
 
 import Edges.Prelude
 import Edges.Types
+import Edges.Cereal.Instances ()
 import qualified Test.QuickCheck.Gen as Gen
 
 instance Show (Node a) where
