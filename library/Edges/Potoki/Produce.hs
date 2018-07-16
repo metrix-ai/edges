@@ -12,7 +12,7 @@ import qualified Potoki.Cereal.Produce as C
 
 nodes :: Edges a x -> Produce (Node a)
 nodes (Edges _ pma) =
-  fmap Node $
+  coerce $
   enumInRange 0 (pred (A.primMultiArrayOuterLength pma))
 
 nodeCounts :: Edges a x -> (Node a -> NodeCounts b) -> Produce (Node a, NodeCounts b)
