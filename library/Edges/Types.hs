@@ -6,7 +6,7 @@ import Edges.Prelude
 
 data Edges source target =
   Edges
-    {-# UNPACK #-} !Int {-^ Target array size -}
+    {-# UNPACK #-} !Int {- Target array size -}
     {-# UNPACK #-} !(PrimMultiArray Word32)
 
 newtype Node entity = Node Int
