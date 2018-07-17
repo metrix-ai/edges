@@ -34,7 +34,7 @@ nodeWithSize :: Int -> Node entity -> NodeCounts entity
 nodeWithSize size (Node index) =
   NodeCounts (C.oneHotPrimArray size index 1)
 
-nodeTargets :: Edges surce target -> Node source -> NodeCounts target
+nodeTargets :: Edges source target -> Node source -> NodeCounts target
 nodeTargets (Edges targetAmount edgesPma) (Node sourceIndex) =
   let indexUnfold = fmap fromIntegral (A.primMultiArrayAt edgesPma sourceIndex)
       indexFold = E.indexCounts targetAmount
