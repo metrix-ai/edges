@@ -13,10 +13,9 @@ where
 import Edges.Prelude
 import Edges.Types
 import Edges.Cereal.Instances ()
-import qualified PrimitiveExtras.Monad as Monad
+import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 import qualified Control.Foldl as Foldl
 import qualified Control.Monad.Par as Par
-import qualified PrimitiveExtras.UnfoldM as UnfoldM
 import qualified DeferredFolds.UnfoldM as UnfoldM
 import qualified Test.QuickCheck.Gen as Gen
 
@@ -55,13 +54,13 @@ primListBipartite list =
 
 primFoldableWithAmounts :: Foldable f => Int -> Int -> f (Int, Word32) -> Edges a b
 primFoldableWithAmounts aAmount bAmount foldable =
-  Edges bAmount $ runIdentity $ Monad.primMultiArray aAmount $ \ fold ->
+  Edges bAmount $ runIdentity $ PrimMultiArray.create aAmount $ \ fold ->
   Identity $ Foldl.fold fold foldable
 
 toAssocUnfoldM :: Monad m => Edges a b -> UnfoldM m (Node a, Node b)
 toAssocUnfoldM (Edges _ mpa) =
   fmap (\ (aInt, bWord32) -> (Node aInt, Node (fromIntegral bWord32))) $
-  UnfoldM.primMultiArrayAssocs mpa
+  PrimMultiArray.toAssocsUnfoldM mpa
 
 toAssocList :: Edges a b -> [(Node a, Node b)]
 toAssocList edges =

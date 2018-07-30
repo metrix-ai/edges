@@ -113,13 +113,14 @@ import Control.Foldl as Exports (Fold(..), FoldM(..))
 import Data.Primitive as Exports
 import Control.Monad.Primitive as Exports
 
+-- primitive-extras
+-------------------------
+import PrimitiveExtras.PrimMultiArray as Exports (PrimMultiArray)
+import PrimitiveExtras.TVarArray as Exports (TVarArray)
+
 -- vector
 -------------------------
 import Data.Vector as Exports (Vector)
-
--- primitive-extras
--------------------------
-import PrimitiveExtras.Data as Exports
 
 -- text
 -------------------------

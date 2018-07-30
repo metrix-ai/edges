@@ -5,7 +5,7 @@ import Edges.Prelude
 import Edges.Types
 import Edges.NodeCounts ()
 import Potoki.Produce
-import qualified PrimitiveExtras.Pure as A
+import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 import qualified Potoki.Transform as B
 import qualified Potoki.Cereal.Produce as C
 
@@ -13,7 +13,7 @@ import qualified Potoki.Cereal.Produce as C
 nodes :: Edges a x -> Produce (Node a)
 nodes (Edges _ pma) =
   coerce $
-  enumInRange 0 (pred (A.primMultiArrayOuterLength pma))
+  enumInRange 0 (pred (PrimMultiArray.outerLength pma))
 
 nodeCounts :: Edges a x -> (Node a -> NodeCounts b) -> Produce (Node a, NodeCounts b)
 nodeCounts edges nodeCounts =

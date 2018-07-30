@@ -12,12 +12,11 @@ where
 import Edges.Prelude hiding (index, toList)
 import Edges.Types
 import Edges.Cereal.Instances ()
-import qualified PrimitiveExtras.UnfoldM as A
-import qualified PrimitiveExtras.Pure as C
-import qualified PrimitiveExtras.IO as D
-import qualified PrimitiveExtras.Fold as E
-import qualified DeferredFolds.UnfoldM as B
-import qualified Data.Vector.Unboxed as F
+import qualified PrimitiveExtras.PrimArray as PrimArray
+import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
+import qualified PrimitiveExtras.TVarArray as TVarArray
+import qualified DeferredFolds.UnfoldM as UnfoldM
+import qualified Data.Vector.Unboxed as UnboxedVector
 import qualified Control.Monad.Par.IO as Par
 import qualified Control.Monad.Par as Par hiding (runParIO)
 
@@ -27,18 +26,18 @@ instance Show (NodeCounts a) where
 
 node :: Edges entity anyEntity -> Node entity -> NodeCounts entity
 node (Edges _ edgesPma) =
-  let size = C.primMultiArrayOuterLength edgesPma
+  let size = PrimMultiArray.outerLength edgesPma
       in nodeWithSize size
 
 nodeWithSize :: Int -> Node entity -> NodeCounts entity
 nodeWithSize size (Node index) =
-  NodeCounts (C.oneHotPrimArray size index 1)
+  NodeCounts (PrimArray.oneHot size index 1)
 
 nodeTargets :: Edges source target -> Node source -> NodeCounts target
 nodeTargets (Edges targetAmount edgesPma) (Node sourceIndex) =
-  let indexUnfold = fmap fromIntegral (A.primMultiArrayAt edgesPma sourceIndex)
-      indexFold = E.indexCounts targetAmount
-      countPa = B.fold indexFold indexUnfold
+  let indexUnfold = fmap fromIntegral (PrimMultiArray.toUnfoldAtM edgesPma sourceIndex)
+      indexFold = PrimArray.indexCountsFold targetAmount
+      countPa = UnfoldM.fold indexFold indexUnfold
       in NodeCounts countPa
 
 {-|
@@ -49,19 +48,19 @@ Utilizes concurrency.
 targets :: Edges source target -> NodeCounts source -> NodeCounts target
 targets (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
   unsafePerformIO $ Par.runParIO $ do
-    targetCountVarTable <- liftIO (D.newTVarArray 0 targetAmount)
+    targetCountVarTable <- liftIO (TVarArray.new 0 targetAmount)
     Par.parFor (Par.InclusiveRange 0 (pred (sizeofPrimArray sourceCountsPa))) $ \ sourceIndex ->
       case indexPrimArray sourceCountsPa sourceIndex of
         0 -> return ()
         sourceCount ->
           liftIO $
-          B.forM_ (A.primMultiArrayAt edgesPma sourceIndex) $ \ targetIndex ->
-          D.modifyTVarArrayAt targetCountVarTable (fromIntegral targetIndex) (+ sourceCount)
-    targetCountsPa <- liftIO (D.freezeTVarArrayAsPrimArray targetCountVarTable)
+          UnfoldM.forM_ (PrimMultiArray.toUnfoldAtM edgesPma sourceIndex) $ \ targetIndex ->
+          TVarArray.modifyAt targetCountVarTable (fromIntegral targetIndex) (+ sourceCount)
+    targetCountsPa <- liftIO (TVarArray.freezeAsPrimArray targetCountVarTable)
     return (NodeCounts targetCountsPa)
 
 toList :: NodeCounts entity -> [Word32]
 toList (NodeCounts pa) = foldrPrimArray' (:) [] pa
 
-toUnboxedVector :: NodeCounts entity -> F.Vector Word32
-toUnboxedVector (NodeCounts pa) = C.primArrayUnboxedVector pa
+toUnboxedVector :: NodeCounts entity -> UnboxedVector.Vector Word32
+toUnboxedVector (NodeCounts pa) = PrimArray.toUnboxedVector pa
