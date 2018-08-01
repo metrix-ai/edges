@@ -1,13 +1,12 @@
+{-# LANGUAGE StrictData #-}
+{-# OPTIONS_GHC -funbox-strict-fields #-}
 module Edges.Types
 where
 
 import Edges.Prelude
 
 
-data Edges source target =
-  Edges
-    {-# UNPACK #-} !Int {- Target array size -}
-    {-# UNPACK #-} !(PrimMultiArray Word32)
+data Edges source target = Edges Int {- Target array size -} (PrimMultiArray Word32)
 
 newtype Node entity = Node Int
 
