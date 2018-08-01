@@ -2,17 +2,14 @@ module Edges.IO
 where
 
 import Edges.Prelude
-import Edges.Types
-import Edges.Node ()
-import Edges.NodeCounts ()
+import Edges.Data
 import Potoki.IO
-import qualified Edges.Potoki.Produce as A
-import qualified Potoki.Transform as B
+import qualified Edges.Potoki.Produces as A
 import qualified Potoki.Cereal.Consume as C
 
 
-encodeNodeCountsToFile :: FilePath -> Edges a x -> (Node a -> NodeCounts z) -> IO (Either IOException ())
-encodeNodeCountsToFile file edges nodeCounts =
+encodeNodeCountsToFile :: FilePath -> Amount a -> (Node a -> NodeCounts z) -> IO (Either IOException ())
+encodeNodeCountsToFile file amount nodeCounts =
   produceAndConsume
-    (A.nodeCounts edges nodeCounts)
+    (A.nodeCounts amount nodeCounts)
     (C.encodeToFile file)

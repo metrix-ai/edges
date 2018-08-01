@@ -41,14 +41,17 @@ library
   default-language:
     Haskell2010
   exposed-modules:
-    Edges.Edges
-    Edges.NodeCounts
-    Edges.Node
-    Edges.Potoki.Produce
+    Edges.Data
+    Edges.Folds
+    Edges.NodeCounting
+    Edges.Potoki.Produces
+    Edges.Potoki.Transforms
     Edges.IO
-    Edges.Fold
+    Edges.Gens
   other-modules:
-    Edges.Cereal.Instances
+    Edges.Functions
+    Edges.Instances
+    Edges.Instances.Cereal
     Edges.Cereal.Get
     Edges.Cereal.Put
     Edges.Prelude

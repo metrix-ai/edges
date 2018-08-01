@@ -7,10 +7,11 @@ import Test.Tasty
 import Test.Tasty.Runners
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
-import qualified Edges.Edges as A
-import qualified Edges.NodeCounts as B
-import qualified Edges.Node as C
-import qualified Data.Serialize as D
+import Edges.Data
+import qualified Edges.NodeCounting as NodeCounting
+import qualified Edges.Data as Data
+import qualified Edges.Gens as Gens
+import qualified Data.Serialize as Cereal
 
 
 main =
@@ -18,9 +19,9 @@ main =
   testGroup "All tests" $
   [
     testGroup "Predefined bipartite" $ let
-      edgeList :: [(C.Node (Proxy 1), C.Node (Proxy 2))]
+      edgeList :: [(Node (Proxy 1), Node (Proxy 2))]
       edgeList =
-        fmap (bimap C.Node C.Node) $
+        fmap (bimap Node Node) $
         [
           (0, 0),
           (0, 1),
@@ -29,40 +30,40 @@ main =
           (1, 1),
           (2, 0)
         ]
-      (edges1, edges2) = A.listBipartite edgeList
+      (edges1, edges2) = Data.listBipartiteEdges edgeList
       in
         [
           testCase "Constructs the forward edges correctly" $ let
-            reconstructedEdgeList = A.toAssocList edges1
+            reconstructedEdgeList = Data.edgesList edges1
             in assertEqual (show reconstructedEdgeList) edgeList reconstructedEdgeList
           ,
           testCase "Constructs the backward edges correctly" $ let
-            reconstructedEdgeList = sort $ A.toAssocList edges2
+            reconstructedEdgeList = sort $ Data.edgesList edges2
             expectedEdgeList = sort $ fmap swap edgeList
             in assertEqual (show reconstructedEdgeList) expectedEdgeList reconstructedEdgeList
           ,
           testGroup "Counting at depth" $ let
-            node = C.Node 1 :: C.Node (Proxy 1)
+            node = Node 1 :: Node (Proxy 1)
             in
               [
-                testCase "0" $ let
-                  nodeCountsList = B.node edges1 node & B.toList
+                testCase "0, unoptimized" $ let
+                  nodeCountsList = NodeCounting.node edges1 node & Data.nodeCountsList
                   in assertEqual (show nodeCountsList) [0, 1, 0] nodeCountsList
                 ,
                 testCase "1, unoptimized" $ let
-                  nodeCountsList = B.node edges1 node & B.targets edges1 & B.toList
+                  nodeCountsList = NodeCounting.node edges1 node & NodeCounting.targets edges1 & Data.nodeCountsList
                   in assertEqual (show nodeCountsList) [1, 1, 0] nodeCountsList
                 ,
                 testCase "1" $ let
-                  nodeCountsList = B.nodeTargets edges1 node & B.toList
+                  nodeCountsList = NodeCounting.nodeTargets edges1 node & Data.nodeCountsList
                   in assertEqual (show nodeCountsList) [1, 1, 0] nodeCountsList
                 ,
                 testCase "2" $ let
-                  nodeCountsList = B.nodeTargets edges1 node & B.targets edges2 & B.toList
+                  nodeCountsList = NodeCounting.nodeTargets edges1 node & NodeCounting.targets edges2 & Data.nodeCountsList
                   in assertEqual (show nodeCountsList) [2, 2, 1] nodeCountsList
                 ,
                 testCase "3" $ let
-                  nodeCountsList = B.nodeTargets edges1 node & B.targets edges2 & B.targets edges1 & B.toList
+                  nodeCountsList = NodeCounting.nodeTargets edges1 node & NodeCounting.targets edges2 & NodeCounting.targets edges1 & Data.nodeCountsList
                   in
                     {-
                     [0, 1]
@@ -74,6 +75,6 @@ main =
               ]
         ]
     ,
-    testProperty "Encoding/decoding with Cereal" $ forAll (A.genBipartiteWithLimits 10 20) $ \ (edges1, edges2) ->
-    D.decode (D.encode edges1) === Right edges1
+    testProperty "Encoding/decoding with Cereal" $ forAll (Gens.bipartiteEdgesWithLimits 10 20) $ \ (edges1, edges2) ->
+    Cereal.decode (Cereal.encode edges1) === Right edges1
   ]

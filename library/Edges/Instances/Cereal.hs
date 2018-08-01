@@ -1,4 +1,4 @@
-module Edges.Cereal.Instances
+module Edges.Instances.Cereal
 where
 
 import Edges.Prelude

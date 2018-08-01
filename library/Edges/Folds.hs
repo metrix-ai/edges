@@ -1,10 +1,9 @@
-module Edges.Fold
+module Edges.Folds
 where
 
 import Edges.Prelude
 import Edges.Types
-import Edges.Node ()
-import Edges.NodeCounts ()
+import Edges.Data
 import qualified PrimitiveExtras.PrimArray as PrimArray
 import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 
