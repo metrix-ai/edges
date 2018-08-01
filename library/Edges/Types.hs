@@ -14,8 +14,6 @@ newtype NodeCounts entity = NodeCounts (PrimArray Word32)
 
 newtype EdgeCounts source target = EdgeCounts (PrimArray Word32)
 
-data Edge source target = Edge Int Word32
-
 {-|
 Total amount of unique entities of the type
 -}

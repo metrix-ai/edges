@@ -3,7 +3,6 @@ module Edges.Data
   Edges,
   Node(..),
   NodeCounts,
-  Edge(..),
   EdgeCounts,
   Amount(..),
   module Functions,
