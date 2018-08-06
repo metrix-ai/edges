@@ -3,8 +3,8 @@ module Edges.Prelude
   module Exports,
   UnboxedVector,
   modifyTVar',
-  forMToZero_,
-  forMFromZero_,
+  forMInAscendingRange_,
+  forMInDescendingRange_,
   (.),
 )
 where
@@ -136,15 +136,15 @@ modifyTVar' var f = do
     x <- readTVar var
     writeTVar var $! f x
 
-{-# INLINE forMToZero_ #-}
-forMToZero_ :: Applicative m => Int -> (Int -> m a) -> m ()
-forMToZero_ !startN f =
-  ($ pred startN) $ fix $ \loop !n -> if n >= 0 then f n *> loop (pred n) else pure ()
-
-{-# INLINE forMFromZero_ #-}
-forMFromZero_ :: Applicative m => Int -> (Int -> m a) -> m ()
-forMFromZero_ !endN f =
-  ($ 0) $ fix $ \loop !n -> if n < endN then f n *> loop (succ n) else pure ()
-
 (.) :: Semigroupoid s => s b c -> s a b -> s a c
 (.) = o
+
+{-# INLINE forMInAscendingRange_ #-}
+forMInAscendingRange_ :: Applicative m => Int -> Int -> (Int -> m a) -> m ()
+forMInAscendingRange_ !startN !endN f =
+  ($ startN) $ fix $ \loop !n -> if n < endN then f n *> loop (succ n) else pure ()
+
+{-# INLINE forMInDescendingRange_ #-}
+forMInDescendingRange_ :: Applicative m => Int -> Int -> (Int -> m a) -> m ()
+forMInDescendingRange_ !startN !endN f =
+  ($ pred startN) $ fix $ \loop !n -> if n >= endN then f n *> loop (pred n) else pure ()
