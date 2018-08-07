@@ -108,6 +108,10 @@ import DeferredFolds.UnfoldM as Exports (UnfoldM(..))
 -------------------------
 import Control.Foldl as Exports (Fold(..), FoldM(..))
 
+-- hashable
+-------------------------
+import Data.Hashable as Exports (Hashable)
+
 -- primitive
 -------------------------
 import Data.Primitive as Exports
@@ -117,6 +121,10 @@ import Control.Monad.Primitive as Exports
 -------------------------
 import PrimitiveExtras.PrimMultiArray as Exports (PrimMultiArray)
 import PrimitiveExtras.TVarArray as Exports (TVarArray)
+
+-- unordered-containers
+-------------------------
+import Data.HashMap.Strict as Exports (HashMap)
 
 -- vector
 -------------------------

@@ -4,8 +4,10 @@ where
 import Edges.Prelude
 import Edges.Types
 import qualified Data.Vector.Unboxed as UnboxedVector
+import qualified DeferredFolds.Unfold as Unfold
 import qualified DeferredFolds.UnfoldM as UnfoldM
 import qualified Control.Foldl as Foldl
+import qualified Edges.Functions.Folds as Foldl
 import qualified Control.Monad.Par as Par
 import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 import qualified PrimitiveExtras.PrimArray as PrimArray
@@ -65,3 +67,7 @@ nodeCountsList (NodeCounts pa) = foldrPrimArray' (:) [] pa
 
 nodeCountsUnboxedVector :: NodeCounts entity -> UnboxedVector.Vector Word32
 nodeCountsUnboxedVector (NodeCounts pa) = PrimArray.toUnboxedVector pa
+
+unindexNodeCounts :: (Eq entity, Hashable entity) => (Int -> Maybe entity) -> NodeCounts entity -> HashMap entity Int
+unindexNodeCounts lookup (NodeCounts pa) =
+  Unfold.fold (Foldl.hashMapByKeyLookup lookup) (fmap fromIntegral (Unfold.primArray pa))
