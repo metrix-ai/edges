@@ -15,3 +15,4 @@ deriving instance Ord (Node a)
 instance Show (Node a) where show (Node int) = show int
 instance Show (NodeCounts a) where show = show . nodeCountsList
 deriving instance Show (Edges a b)
+deriving instance Show (Amount a)
