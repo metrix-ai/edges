@@ -6,7 +6,7 @@ description: A set of tools for constructing immutable graphs which are both mem
 homepage: https://github.com/metrix-ai/edges
 bug-reports: https://github.com/metrix-ai/edges/issues
 author: Nikita Volkov <nikita.y.volkov@mail.ru>
-maintainer: Metrix Tech Team <tech@metrix.ai>
+maintainer: Metrix.AI Tech Team <tech@metrix.ai>
 copyright: (c) 2018, Metrix.AI
 license: MIT
 license-file: LICENSE
