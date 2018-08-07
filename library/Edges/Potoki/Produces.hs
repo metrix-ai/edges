@@ -12,15 +12,15 @@ import qualified Edges.Potoki.Transforms as Transforms
 {-|
 Enumerate nodes.
 -}
-sourceNodes :: Amount a -> Produce (Node a)
-sourceNodes (Amount amountInt) = coerce (enumInRange 0 (pred amountInt))
+nodes :: Amount a -> Produce (Node a)
+nodes (Amount amountInt) = coerce (enumInRange 0 (pred amountInt))
 
 {-|
 Node counts paired with the source nodes.
 -}
 nodeCounts :: Amount a -> (Node a -> NodeCounts b) -> Produce (Node a, NodeCounts b)
 nodeCounts amount nodeCounts =
-  transform (Transforms.executeNodeCountQuery nodeCounts) (sourceNodes amount)
+  transform (Transforms.executeNodeCountQuery nodeCounts) (nodes amount)
 
 readNodeCountsFromFile :: FilePath -> Produce (Either IOException (Either Text (Node a, NodeCounts b)))
 readNodeCountsFromFile file =
