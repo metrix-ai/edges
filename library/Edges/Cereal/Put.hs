@@ -3,22 +3,19 @@ where
 
 import Edges.Prelude
 import Edges.Types
-import Data.Serialize.Put
+import Data.Serialize
 import qualified PrimitiveExtras.PrimArray as PrimArray
 import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 
 
-int :: Putter Int
-int = putInt64le . fromIntegral
-
 nodeCounts :: Putter (NodeCounts entity)
 nodeCounts (NodeCounts pa) =
-  PrimArray.cerealPut int putWord32le pa
+  PrimArray.cerealPutAsInMemory put pa
 
 edges :: Putter (Edges a b)
 edges (Edges targetSpaceValue mpaValue) = targetSpace <> mpa where
-  targetSpace = int targetSpaceValue
-  mpa = PrimMultiArray.cerealPut int putWord32le mpaValue
+  targetSpace = put targetSpaceValue
+  mpa = PrimMultiArray.cerealPutAsInMemory put mpaValue
 
 node :: Putter (Node a)
-node (Node x) = int x
+node (Node x) = put x

@@ -3,23 +3,20 @@ where
 
 import Edges.Prelude
 import Edges.Types
-import Data.Serialize.Get
+import Data.Serialize
 import qualified PrimitiveExtras.PrimArray as PrimArray
 import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 
 
-int :: Get Int
-int = fromIntegral <$> getInt64le
-
 nodeCounts :: Get (NodeCounts entity)
 nodeCounts =
-  NodeCounts <$> PrimArray.cerealGet int getWord32le
+  NodeCounts <$> PrimArray.cerealGetAsInMemory get
 
 edges :: Get (Edges a b)
 edges = do
-  targetSpace <- int
-  pma <- PrimMultiArray.cerealGet int getWord32le
+  targetSpace <- get
+  pma <- PrimMultiArray.cerealGetAsInMemory get
   return (Edges targetSpace pma)
 
 node :: Get (Node a)
-node = Node <$> int
+node = Node <$> get
