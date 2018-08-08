@@ -144,6 +144,10 @@ import Data.Vector as Exports (Vector)
 -------------------------
 import Data.Text as Exports (Text)
 
+-- deepseq
+-------------------------
+import Control.DeepSeq as Exports
+
 import qualified Data.Vector.Unboxed as UnboxedVector
 
 type UnboxedVector = UnboxedVector.Vector
