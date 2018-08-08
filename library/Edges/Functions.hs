@@ -70,4 +70,4 @@ nodeCountsUnboxedVector (NodeCounts pa) = PrimArray.toUnboxedVector pa
 
 unindexNodeCounts :: (Eq entity, Hashable entity) => (Int -> Maybe entity) -> NodeCounts entity -> HashMap entity Int
 unindexNodeCounts lookup (NodeCounts pa) =
-  Unfold.fold (Foldl.hashMapByKeyLookup lookup) (fmap fromIntegral (Unfold.primArray pa))
+  Unfold.fold (Foldl.hashMapByKeyLookup lookup) (Unfold.intsInRange 0 (pred (sizeofPrimArray pa)))
