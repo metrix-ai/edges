@@ -69,5 +69,10 @@ nodeCountsUnboxedVector :: NodeCounts entity -> UnboxedVector.Vector Word32
 nodeCountsUnboxedVector (NodeCounts pa) = PrimArray.toUnboxedVector pa
 
 unindexNodeCounts :: (Eq entity, Hashable entity) => (Int -> Maybe entity) -> NodeCounts entity -> HashMap entity Int
-unindexNodeCounts lookup (NodeCounts pa) =
-  Unfold.fold (Foldl.hashMapByKeyLookup lookup) (Unfold.intsInRange 0 (pred (sizeofPrimArray pa)))
+unindexNodeCounts lookup (NodeCounts pa) = let
+  unfold = do
+    index <- Unfold.intsInRange 0 (pred (sizeofPrimArray pa))
+    return $ do
+      entity <- lookup index
+      return (entity, fromIntegral (indexPrimArray pa index))
+  in Unfold.fold (Foldl.hashMapByMapMaybe id) unfold

@@ -6,6 +6,16 @@ module Edges.Prelude
   forMInAscendingRange_,
   forMInDescendingRange_,
   (.),
+  showText,
+  -- * Optics
+  Lens,
+  Lens',
+  Prism,
+  Prism',
+  lens,
+  prism,
+  _Left,
+  _Just,
 )
 where
 
@@ -156,3 +166,33 @@ forMInAscendingRange_ !startN !endN f =
 forMInDescendingRange_ :: Applicative m => Int -> Int -> (Int -> m a) -> m ()
 forMInDescendingRange_ !startN !endN f =
   ($ pred startN) $ fix $ \loop !n -> if n >= endN then f n *> loop (pred n) else pure ()
+
+showText = fromString . show
+
+
+-- * Optics
+-------------------------
+
+type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t
+
+type Lens' s a = Lens s s a a
+
+type Prism s t a b = forall p f. (Choice p, Applicative f) => p a (f b) -> p s (f t)
+
+type Prism' s a = Prism s s a a
+
+{-# INLINE lens #-}
+lens :: (s -> a) -> (s -> b -> t) -> Lens s t a b
+lens sa sbt afb s = sbt s <$> afb (sa s)
+
+{-# INLINE prism #-}
+prism :: (b -> t) -> (s -> Either t a) -> Prism s t a b
+prism bt seta = dimap seta (either pure (fmap bt)) . right'
+
+{-# INLINE _Left #-}
+_Left :: Prism' (Either a b) a
+_Left = prism Left (either Right (Left . Right))
+
+{-# INLINE _Just #-}
+_Just :: Prism' (Maybe a) a
+_Just = prism Just (maybe (Left Nothing) Right)
