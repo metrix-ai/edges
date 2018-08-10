@@ -62,10 +62,10 @@ primFoldableWithAmountsEdges aAmount bAmount foldable =
   Edges bAmount $ runIdentity $ PrimMultiArray.create aAmount $ \ fold ->
   Identity $ Foldl.fold fold foldable
 
-nodeCountsList :: NodeCounts entity -> [Word32]
+nodeCountsList :: NodeCounts entity -> [Word64]
 nodeCountsList (NodeCounts pa) = foldrPrimArray' (:) [] pa
 
-nodeCountsUnboxedVector :: NodeCounts entity -> UnboxedVector.Vector Word32
+nodeCountsUnboxedVector :: NodeCounts entity -> UnboxedVector.Vector Word64
 nodeCountsUnboxedVector (NodeCounts pa) = PrimArray.toUnboxedVector pa
 
 unindexNodeCounts :: (Eq entity, Hashable entity) => (Int -> Maybe entity) -> NodeCounts entity -> HashMap entity Int

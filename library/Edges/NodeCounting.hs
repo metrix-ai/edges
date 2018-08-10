@@ -50,7 +50,7 @@ Count the occurrences of targets based on the occurrences of sources.
 This function can be used to reduce the amount of computation by excluding the nodes,
 which don't make much difference.
 -}
-targetsWithMinSourceAmount :: Word32 -> Edges source target -> NodeCounts source -> NodeCounts target
+targetsWithMinSourceAmount :: Word64 -> Edges source target -> NodeCounts source -> NodeCounts target
 targetsWithMinSourceAmount minSourceCount (Edges targetAmount edgesPma) (NodeCounts sourceCountsPa) =
   unsafePerformIO $ do
     targetCountsMpa <- newPrimArray targetAmount
