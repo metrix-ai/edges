@@ -46,14 +46,6 @@ main =
             node = Node 1 :: Node (Proxy 1)
             in
               [
-                testCase "0, unoptimized" $ let
-                  nodeCountsList = NodeCounting.node edges1 node & Data.nodeCountsList
-                  in assertEqual (show nodeCountsList) [0, 1, 0] nodeCountsList
-                ,
-                testCase "1, unoptimized" $ let
-                  nodeCountsList = NodeCounting.node edges1 node & NodeCounting.targets edges1 & Data.nodeCountsList
-                  in assertEqual (show nodeCountsList) [1, 1, 0] nodeCountsList
-                ,
                 testCase "1" $ let
                   nodeCountsList = NodeCounting.nodeTargets edges1 node & Data.nodeCountsList
                   in assertEqual (show nodeCountsList) [1, 1, 0] nodeCountsList

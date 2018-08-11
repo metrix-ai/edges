@@ -151,6 +151,10 @@ import Control.DeepSeq as Exports
 -------------------------
 import Data.DoubleWord as Exports
 
+-- cereal-vector
+-------------------------
+import Data.Vector.Serialize ()
+
 import qualified Data.Vector.Unboxed as UnboxedVector
 import qualified Data.Vector.Unboxed.Deriving as UnboxedVectorDeriving
 
@@ -220,3 +224,11 @@ UnboxedVectorDeriving.derivingUnbox "Word256"
   [t| Word256 -> (Word128, Word128) |]
   [| \ (Word256 a b) -> (a, b) |]
   [| \ (a, b) -> Word256 a b |]
+
+
+-- * Instances for "cereal"
+-------------------------
+
+instance Serialize Word96
+instance Serialize Word128
+instance Serialize Word256

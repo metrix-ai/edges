@@ -62,17 +62,17 @@ primFoldableWithAmountsEdges aAmount bAmount foldable =
   Edges bAmount $ runIdentity $ PrimMultiArray.create aAmount $ \ fold ->
   Identity $ Foldl.fold fold foldable
 
-nodeCountsList :: NodeCounts entity -> [Word64]
-nodeCountsList (NodeCounts pa) = foldrPrimArray' (:) [] pa
+nodeCountsList :: NodeCounts entity -> [Word128]
+nodeCountsList (NodeCounts vector) = UnboxedVector.foldr (:) [] vector
 
-nodeCountsUnboxedVector :: NodeCounts entity -> UnboxedVector.Vector Word64
-nodeCountsUnboxedVector (NodeCounts pa) = PrimArray.toUnboxedVector pa
+nodeCountsUnboxedVector :: NodeCounts entity -> UnboxedVector.Vector Word128
+nodeCountsUnboxedVector (NodeCounts vector) = vector
 
-unindexNodeCounts :: (Eq entity, Hashable entity) => (Int -> Maybe entity) -> NodeCounts entity -> HashMap entity Int
-unindexNodeCounts lookup (NodeCounts pa) = let
+unindexNodeCounts :: (Eq entity, Hashable entity) => (Int -> Maybe entity) -> NodeCounts entity -> HashMap entity Word128
+unindexNodeCounts lookup (NodeCounts vector) = let
   unfold = do
-    index <- Unfold.intsInRange 0 (pred (sizeofPrimArray pa))
+    index <- Unfold.intsInRange 0 (pred (UnboxedVector.length vector))
     return $ do
       entity <- lookup index
-      return (entity, fromIntegral (indexPrimArray pa index))
+      return (entity, fromIntegral (UnboxedVector.unsafeIndex vector index))
   in Unfold.fold (Foldl.hashMapByMapMaybe id) unfold
