@@ -147,7 +147,12 @@ import Data.Text as Exports (Text)
 -------------------------
 import Control.DeepSeq as Exports
 
+-- data-dword
+-------------------------
+import Data.DoubleWord as Exports
+
 import qualified Data.Vector.Unboxed as UnboxedVector
+import qualified Data.Vector.Unboxed.Deriving as UnboxedVectorDeriving
 
 type UnboxedVector = UnboxedVector.Vector
 
@@ -196,3 +201,22 @@ _Left = prism Left (either Right (Left . Right))
 {-# INLINE _Just #-}
 _Just :: Prism' (Maybe a) a
 _Just = prism Just (maybe (Left Nothing) Right)
+
+
+-- * Instances for unboxed vectors
+-------------------------
+
+UnboxedVectorDeriving.derivingUnbox "Word96"
+  [t| Word96 -> (Word32, Word64) |]
+  [| \ (Word96 a b) -> (a, b) |]
+  [| \ (a, b) -> Word96 a b |]
+
+UnboxedVectorDeriving.derivingUnbox "Word128"
+  [t| Word128 -> (Word64, Word64) |]
+  [| \ (Word128 a b) -> (a, b) |]
+  [| \ (a, b) -> Word128 a b |]
+
+UnboxedVectorDeriving.derivingUnbox "Word256"
+  [t| Word256 -> (Word128, Word128) |]
+  [| \ (Word256 a b) -> (a, b) |]
+  [| \ (a, b) -> Word256 a b |]
