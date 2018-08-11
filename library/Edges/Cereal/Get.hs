@@ -9,8 +9,7 @@ import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 
 
 nodeCounts :: Get (NodeCounts entity)
-nodeCounts =
-  NodeCounts <$> PrimArray.cerealGetAsInMemory get
+nodeCounts = NodeCounts <$> get
 
 edges :: Get (Edges a b)
 edges = do

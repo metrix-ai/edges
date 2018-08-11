@@ -10,7 +10,7 @@ data Edges source target = Edges Int {- Target array size -} (PrimMultiArray Wor
 
 newtype Node entity = Node Int
 
-newtype NodeCounts entity = NodeCounts (PrimArray Word64)
+newtype NodeCounts entity = NodeCounts (UnboxedVector Word128)
 
 newtype EdgeCounts source target = EdgeCounts (PrimArray Word64)
 

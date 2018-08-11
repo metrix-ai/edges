@@ -9,8 +9,8 @@ import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 
 
 nodeCounts :: Putter (NodeCounts entity)
-nodeCounts (NodeCounts pa) =
-  PrimArray.cerealPutAsInMemory put pa
+nodeCounts (NodeCounts vector) =
+  put vector
 
 edges :: Putter (Edges a b)
 edges (Edges targetSpaceValue mpaValue) = targetSpace <> mpa where
