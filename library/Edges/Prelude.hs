@@ -5,7 +5,6 @@ module Edges.Prelude
   modifyTVar',
   forMInAscendingRange_,
   forMInDescendingRange_,
-  (.),
   showText,
   -- * Optics
   Lens,
@@ -24,7 +23,7 @@ where
 -------------------------
 import Control.Applicative as Exports
 import Control.Arrow as Exports
-import Control.Category as Exports hiding ((.))
+import Control.Category as Exports
 import Control.Concurrent as Exports
 import Control.Exception as Exports
 import Control.Monad as Exports hiding (mapM_, sequence_, forM_, msum, mapM, sequence, forM)
@@ -157,9 +156,6 @@ modifyTVar' :: TVar a -> (a -> a) -> STM ()
 modifyTVar' var f = do
     x <- readTVar var
     writeTVar var $! f x
-
-(.) :: Semigroupoid s => s b c -> s a b -> s a c
-(.) = o
 
 {-# INLINE forMInAscendingRange_ #-}
 forMInAscendingRange_ :: Applicative m => Int -> Int -> (Int -> m a) -> m ()
