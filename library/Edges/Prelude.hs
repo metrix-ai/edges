@@ -155,6 +155,10 @@ import Data.DoubleWord as Exports
 -------------------------
 import Data.Vector.Serialize ()
 
+-- cereal-data-dword
+-------------------------
+import Cereal.DataDWord.Serialize ()
+
 import qualified Data.Vector.Unboxed as UnboxedVector
 import qualified Data.Vector.Unboxed.Deriving as UnboxedVectorDeriving
 
@@ -225,10 +229,3 @@ UnboxedVectorDeriving.derivingUnbox "Word256"
   [| \ (Word256 a b) -> (a, b) |]
   [| \ (a, b) -> Word256 a b |]
 
-
--- * Instances for "cereal"
--------------------------
-
-instance Serialize Word96
-instance Serialize Word128
-instance Serialize Word256
