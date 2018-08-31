@@ -1,5 +1,5 @@
 name: edges
-version: 0.11.0.1
+version: 0.11.0.2
 category: Graphs
 synopsis: Tools for efficient immutable graphs
 description: A set of tools for constructing immutable graphs which are both memory and performance-efficient.
