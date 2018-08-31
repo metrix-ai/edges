@@ -4,8 +4,8 @@ where
 import Edges.Prelude
 import Edges.Types
 import qualified Data.Vector.Unboxed as UnboxedVector
-import qualified DeferredFolds.Unfold as Unfold
-import qualified DeferredFolds.UnfoldM as UnfoldM
+import qualified DeferredFolds.Unfoldl as Unfoldl
+import qualified DeferredFolds.UnfoldlM as UnfoldlM
 import qualified Control.Foldl as Foldl
 import qualified Edges.Functions.Folds as Foldl
 import qualified Control.Monad.Par as Par
@@ -19,14 +19,14 @@ edgesSourceAmount (Edges _ pma) = Amount (PrimMultiArray.outerLength pma)
 edgesTargetAmount :: Edges x target -> Amount target
 edgesTargetAmount (Edges amount _) = Amount amount
 
-edgesUnfoldM :: Monad m => Edges a b -> UnfoldM m (Node a, Node b)
-edgesUnfoldM (Edges _ mpa) =
+edgesUnfoldlM :: Monad m => Edges a b -> UnfoldlM m (Node a, Node b)
+edgesUnfoldlM (Edges _ mpa) =
   fmap (\ (aInt, bWord32) -> (Node aInt, Node (fromIntegral bWord32))) $
-  PrimMultiArray.toAssocsUnfoldM mpa
+  PrimMultiArray.toAssocsUnfoldlM mpa
 
 edgesList :: Edges a b -> [(Node a, Node b)]
 edgesList edges =
-  UnfoldM.fold Foldl.list (edgesUnfoldM edges)
+  UnfoldlM.fold Foldl.list (edgesUnfoldlM edges)
 
 listEdges :: [(Node a, Node b)] -> Edges a b
 listEdges list =
@@ -70,9 +70,9 @@ nodeCountsUnboxedVector (NodeCounts vector) = vector
 
 unindexNodeCounts :: (Eq entity, Hashable entity) => (Int -> Maybe entity) -> NodeCounts entity -> HashMap entity Word128
 unindexNodeCounts lookup (NodeCounts vector) = let
-  unfold = do
-    index <- Unfold.intsInRange 0 (pred (UnboxedVector.length vector))
+  unfoldl = do
+    index <- Unfoldl.intsInRange 0 (pred (UnboxedVector.length vector))
     return $ do
       entity <- lookup index
       return (entity, fromIntegral (UnboxedVector.unsafeIndex vector index))
-  in Unfold.fold (Foldl.hashMapByMapMaybe id) unfold
+  in Unfoldl.fold (Foldl.hashMapByMapMaybe id) unfoldl

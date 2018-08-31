@@ -16,7 +16,7 @@ import Edges.Instances ()
 import qualified PrimitiveExtras.PrimArray as PrimArray
 import qualified PrimitiveExtras.PrimMultiArray as PrimMultiArray
 import qualified PrimitiveExtras.TVarArray as TVarArray
-import qualified DeferredFolds.UnfoldM as UnfoldM
+import qualified DeferredFolds.UnfoldlM as UnfoldlM
 import qualified Data.Vector.Unboxed as UnboxedVector
 import qualified Data.Vector.Unboxed.Mutable as MutableUnboxedVector
 
@@ -25,7 +25,7 @@ nodeTargets :: Edges source target -> Node source -> NodeCounts target
 nodeTargets (Edges targetAmount edgesPma) (Node sourceIndex) = do
   unsafePerformIO $ do
     targetCountsMVec <- MutableUnboxedVector.new targetAmount
-    UnfoldM.forM_ (fmap fromIntegral $ PrimMultiArray.toUnfoldAtM edgesPma sourceIndex) $ \ targetIndex -> do
+    UnfoldlM.forM_ (fmap fromIntegral $ PrimMultiArray.toUnfoldlAtM edgesPma sourceIndex) $ \ targetIndex -> do
       targetCount <- MutableUnboxedVector.read targetCountsMVec targetIndex
       MutableUnboxedVector.unsafeWrite targetCountsMVec targetIndex (targetCount + 1)
     targetCountsVec <- UnboxedVector.unsafeFreeze targetCountsMVec
@@ -48,7 +48,7 @@ targetsWithMinSourceAmount minSourceCount (Edges targetAmount edgesPma) (NodeCou
   unsafePerformIO $ do
     targetCountsMVec <- MutableUnboxedVector.new targetAmount
     flip UnboxedVector.imapM_ sourceCountsVec $ \ sourceIndex sourceCount -> if sourceCount >= minSourceCount
-      then UnfoldM.forM_ (fmap fromIntegral $ PrimMultiArray.toUnfoldAtM edgesPma sourceIndex) $ \ targetIndex -> do
+      then UnfoldlM.forM_ (fmap fromIntegral $ PrimMultiArray.toUnfoldlAtM edgesPma sourceIndex) $ \ targetIndex -> do
         targetCount <- MutableUnboxedVector.read targetCountsMVec targetIndex
         MutableUnboxedVector.unsafeWrite targetCountsMVec targetIndex (targetCount + sourceCount)
       else return ()
