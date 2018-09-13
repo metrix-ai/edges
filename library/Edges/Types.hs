@@ -12,7 +12,7 @@ newtype Node entity = Node Int
 
 newtype NodeCounts entity = NodeCounts (UnboxedVector Word128)
 
-newtype EdgeCounts source target = EdgeCounts (PrimArray Word64)
+newtype EdgeCounts source target = EdgeCounts (PrimArray Word32)
 
 {-|
 Total amount of unique entities of the type
