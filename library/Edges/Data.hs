@@ -1,15 +1,10 @@
 module Edges.Data
 (
-  Edges,
-  Node(..),
-  NodeCounts,
-  EdgeCounts,
-  Amount(..),
-  module Functions,
+  module Exports,
 )
 where
 
 import Edges.Prelude
-import Edges.Types
+import Edges.Types as Exports
 import Edges.Instances
-import Edges.Functions as Functions
+import Edges.Functions as Exports
