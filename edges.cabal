@@ -47,7 +47,7 @@ library
     hashable >=1.2 && <2,
     monad-par >=0.3.4.8 && <0.4,
     pointed >=5 && <6,
-    potoki >=2.0.2 && <2.1,
+    potoki >=2.1.2 && <2.2,
     potoki-cereal >=0.3 && <0.4,
     primitive >=0.6.4 && <0.7,
     primitive-extras >=0.7 && <0.8,
